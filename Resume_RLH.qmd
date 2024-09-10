@@ -6,7 +6,7 @@ editor: visual
 ---
 
 +--------------------------------------------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------+
-| ## Fieldwork and Volunteer Experience  {#sec-fieldwork-and-volunteer-experience- .illustration style="color: darkgreen"}                               | ## Contact Info {#sec-contact-info .illustration style="color: darkgreen"} |
+| ## Fieldwork and Volunteer Experience {#sec-fieldwork-and-volunteer-experience- .illustration style="color: darkgreen"}                                | ## Contact Info {#sec-contact-info .illustration style="color: darkgreen"} |
 |                                                                                                                                                        |                                                                            |
 | **Maymont, Richmond VA — *Intern and Horticulture Volunteer***                                                                                         | hooverb\@vcu.edu                                                           |
 |                                                                                                                                                        |                                                                            |
@@ -69,6 +69,7 @@ editor: visual
 |                                                                                                                                                        | Available upon request                                                     |
 | -   Responded quickly to customer inquiries, answering questions and offering insight into operations of the Outing Rental Center, and Climbing Wall.  |                                                                            |
 +========================================================================================================================================================+============================================================================+
+|                                                                                                                                                        |                                                                            |
 +--------------------------------------------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------+
 
 +-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -84,4 +85,5 @@ editor: visual
 |                                                                                                                                                                                                                 |
 | -   Assisted in upkeep of inventory to provide accurate store supply and worked flexible schedules and extra shifts to meet business needs.                                                                     |
 +=================================================================================================================================================================================================================+
+|                                                                                                                                                                                                                 |
 +-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
