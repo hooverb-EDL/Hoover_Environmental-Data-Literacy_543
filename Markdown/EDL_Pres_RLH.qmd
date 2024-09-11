@@ -8,6 +8,8 @@ title-slide-attributes:
     data-background-image: /images/blvu.jpg
     data-background-size: full
     data-background-opacity: "0.5"
+editor_options: 
+  chunk_output_type: inline
 ---
 
 ## ✶ A little bit about me ✶ {background-color="darkolivegreen"}
