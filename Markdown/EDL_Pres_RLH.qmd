@@ -1,0 +1,118 @@
+---
+title: "Environmental Studies Overview"
+subtitle: "Presentation by: Rebecca Hoover"
+format: revealjs
+editor: visual
+transition: fade
+title-slide-attributes:
+    data-background-image: /images/blvu.jpg
+    data-background-size: full
+    data-background-opacity: "0.5"
+---
+
+## ✶ A little bit about me ✶ {background-color="darkolivegreen"}
+
+![](images/20230127_125817-02.jpg){.absolute bottom="0" right="50" width="300" height="500"}
+
+::: incremental
+-   First Generation Outdoor Professional and College Student
+
+-   Graduating in Spring 2025
+
+-   Art Hobbyist
+
+-   Certified Tree Hugger
+
+-   My favorite animals are Bears
+:::
+
+## ✶ What are my basic interests in Environmental Studies ✶ {background-color="antiquewhite"}
+
+![](images/20231006_150228.jpg){.absolute bottom="0" right="0" width="284"}
+
+::: incremental
+-   Forestry
+
+    -   Using fire for Forest Management
+
+-   Dendrology
+
+-   GIS
+
+-   Arboriculture
+:::
+
+## ✶ Why VCU? ✶ {background-color="darkolivegreen"}
+
+![](images/vcu-rams-ncaa-logo-sticker-ncaa208-5280-36a6ec.png){.absolute top="0" right="0" width="287"}
+
+![](images/CRC-Counties-3D.png){.absolute bottom="0" right="0" width="429" height="334"}
+
+::: incremental
+-   Close to Home
+
+-   Incremental part of home community
+
+-   Diversity and Inclusion
+
+-   Affordable
+
+-   Great Resources for Students
+
+-   Great ENVS Program
+:::
+
+## ✶ Some Cool Experiences ✶ {.scrollable .smaller background-color="antiquewhite"}
+
+##### Basically Imagery for stuff I put on my resume
+
+![](images/20230902_190410.jpg){.absolute bottom="0" right="235" width="240"}
+
+![](images/20230914_111928.jpg){.absolute top="0" right="0" width="239"}
+
+![](images/20231219_160739%20(1).jpg){.absolute bottom="0" right="0" width="236"}
+
+![](images/Copy%20of%20IMG_6950.JPG){.absolute bottom="0" right="0" width="235"}
+
+::: incremental
+-   False Cape State Park
+
+    -   Volunteered helping the park maintenance for Spring Break.
+
+-   Maymont Foundation
+
+    -   Used application of Urban Ecology\
+        and GIS studies
+
+-   Outdoor Adventure Program
+
+    -   Sea Yakking - One of OAPS cool trips!\
+        ✶ Check out the [Fall 2024 Trips](https://recwell.vcu.edu/play/outdoor-adventure/trips-and-activities/) ✶
+
+    -   Student Manager and Intern
+
+-   VCU Rice River Center
+
+    -   Assisted Eric Bouma with Privet Removal\
+        and Tree Data Collection
+:::
+
+## ✶ Future Plans ✶ {background-color="darkolivegreen"}
+
+![](images/FD40o7SUYAEODmC.jpg){.absolute bottom="50" right="0" width="517"}
+
+::: incremental
+-   Virginia State Parks
+
+    -   Park Ranger
+
+-   Forest Management
+
+-   Restoration Ecology
+
+-   Application in GIS
+:::
+
+##  {background-color="antiquewhite" background-image="Eagle_Question" background-size="100px" background-repeat="repeat"}
+
+![](images/Eagle_Question.png)
