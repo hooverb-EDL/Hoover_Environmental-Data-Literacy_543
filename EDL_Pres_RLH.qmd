@@ -81,7 +81,7 @@ title-slide-attributes:
 
 -   Maymont Foundation
 
-    -   Used application of Urban Ecology \
+    -   Used application of Urban Ecology\
         and GIS studies
 
 -   Outdoor Adventure Program
@@ -93,7 +93,7 @@ title-slide-attributes:
 
 -   VCU Rice River Center
 
-    -   Assisted Eric Bouma with Privet Removal \
+    -   Assisted Eric Bouma with Privet Removal\
         and Tree Data Collection
 :::
 
