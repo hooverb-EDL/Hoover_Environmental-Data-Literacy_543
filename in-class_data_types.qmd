@@ -5,8 +5,6 @@ format:
   html:
     code-tools: true
     toc: false
-    exec: true
-    echo: true
 ---
 
 ## Overview & Objective
