@@ -33,3 +33,6 @@ po/*~
 rsconnect/
 /.quarto/
 Resume_RLH_2.qmd
+
+.DS_Store
+
