@@ -1,7 +1,7 @@
 ---
 title: "Data Types In Class Activity"
 author: "Rebecca Hoover"
-format: 
+format: html
   html:
     code-tools: true
     toc: false
