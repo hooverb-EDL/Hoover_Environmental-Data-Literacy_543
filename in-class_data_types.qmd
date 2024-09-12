@@ -1,7 +1,7 @@
 ---
 title: "Data Types In Class Activity"
 author: "Rebecca Hoover"
-format: html
+format:
   html:
     code-tools: true
     toc: false
@@ -98,7 +98,7 @@ properName
 The function `nchar()` returns the number of characters in a character variable.  Use it on your `properName`.
 
 ```{r}
-
+nchar(properName)
 ```
 
 
@@ -126,15 +126,19 @@ trueResult != falseResult
 Using the variables `trueResult` and `falseResult` demonstrate AND operator in R for all pairwise combinations (e.g, for the and operator, show how to evaluate `trueResult` and `trueResult`, `trueResult` and `falseResult`, `falseResult` and `trueResult`, and `falseResult` and `falseResult`)
 
 ```{r}
-trueResult | falseResult
-
-
+trueResult & trueResult
+trueResult & falseResult
+falseResult & trueResult
+falseResult & falseResult
 ```
 
 Do the same as the previous question for the approriate OR operator.
 
 ```{r}
-
+trueResult | trueResult
+trueResult | falseResult
+falseResult | trueResult
+falseResult | falseResult
 ```
 
 
@@ -143,7 +147,7 @@ Do the same as the previous question for the approriate OR operator.
 In the example above for the square root, the variable `root2` has the square root of the number $2$.  Test the equality (e.g., use the `==` operator) of this varible times itself to the value $2$. Discuss this with your neighbor.  Does this make sense?
 
 ```{r}
-root
+root2 == root2*root2
 ```
 
 
@@ -153,15 +157,16 @@ root
 
 When did you first become a college student?  Create a variable representing this date.
 
-```{r}
-
+```{r, message=FALSE}
+library(lubridate)
+mdy("08/22/2022") -> started
 ```
 
 
 How many days was it between then and now?
 
 ```{r}
-
+today() - started
 ```
 
 
