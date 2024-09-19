@@ -1,0 +1,93 @@
+---
+title: "Tidyverse"
+subtitle: "In Class Activity"
+format: html
+execute:
+  echo: false
+---
+
+
+## The Question
+
+> Describe the daytime air temperatures at the Rice Rivers Center for February, 2014 by day of the week.
+
+
+## The Data
+
+For this topic we will use some example data from the [Rice Rivers Center](https://ricerivers.vcu.edu).  These data represent both atmospheric and water data collected from instrumentation on-site.  I have stored these data in a spreadsheet that is shared on Google Drive as a CSV file.
+
+```{r}
+library( tidyverse )
+url <- "https://docs.google.com/spreadsheets/d/1Mk1YGH9LqjF7drJE-td1G_JkdADOU0eMlrP01WFBT8s/pub?gid=0&single=true&output=csv"
+rice <- read_csv( url )
+summary( rice )
+```
+
+These data represent measurements taken every 15 minutes, 24 hours a day, 7 days a week, 365 days a year.  For brevity, this file contains measurements starting at `r rice$DateTime[1]` and ending at `r rev(rice$DateTime)[1]` (only `r nrow(rice)` records here...).
+
+If you look at the summary of the data above, you will see several things, including:
+
+- Date and time objects are `character`
+- Some measurements are in Standard and some in Imperial with units in the same file include both °F and °C, as well as measurements in meters, feet, and inches.  In fact, there are duplication of data columns in different units (guess what kind of correlation they might have...)
+
+
+
+```{r}
+library( knitr )
+library( kableExtra )
+library( lubridate)
+rice %>%
+  select( DateTime, AirTempF) %>%  # select the columns (DateTime, AirTempF)
+  mutate( Date = mdy_hms( DateTime, 
+                          tz="EST") ) %>%   # mutate to make Date
+  select( Date, AirTempF ) %>%
+  mutate( Month = month( Date )) %>%
+  filter( Month == 2 ) %>%                  # filter for February
+  select( -Month ) %>%
+  mutate( Hour = hour( Date ) ) %>%      # filter for daytime
+  filter( Hour >= 7, Hour <= 18 ) %>% 
+  mutate( Weekday = factor( weekdays( Date ), 
+                            ordered = TRUE,
+                            levels = c("Monday",
+                                       "Tuesday",
+                                       "Wednesday",
+                                       "Thursday",
+                                       "Friday",
+                                       "Saturday",
+                                       "Sunday")) ) %>% # mutate to add Weekday
+  mutate( TempC =  (AirTempF - 32) * 5/9    ) %>% 
+  group_by( Weekday ) %>%
+  summarize( Minimum = min(TempC ),
+              Mean = mean( TempC ), 
+              Maximum = max( TempC ) )  -> df 
+
+df %>%   # summarize min, max, mean
+  kable( digits=3, caption = "My way cool table.") %>%
+  kable_classic() 
+# kable()
+
+
+```
+
+
+Min & Max Turbidity by Month as Kable 
+
+```{r}
+rice %>%
+  mutate( Date = mdy_hms(DateTime),
+          Month = month(Date, abbr = FALSE, label = TRUE) ) %>%
+  group_by( Month ) %>%
+  summarise( Minimum = min( Turbidity_ntu, na.rm=TRUE),
+             Maximum = max( Turbidity_ntu, na.rm=TRUE) ) %>%
+  kable( caption = "Water turbidity from sensors at the Rice Rivers Center, in the first quarter of 2014.") %>%
+  kable_classic_2( full_width=FALSE) %>%
+  add_header_above( c(" ", "Turbidity"=2))
+  
+```
+
+
+
+
+
+
+
