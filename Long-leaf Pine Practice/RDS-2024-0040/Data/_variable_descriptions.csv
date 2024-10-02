@@ -1,0 +1,49 @@
+﻿Filename,Variable,Units,Precision,Description
+,,,,
+LLP_Cone_Crop_Monitoring_Site_Locations.csv,State,,,"state where site is located (AL = Alabama, FL = Florida, GA = Georgia, LA = Louisiana, NC = North Carolina, SC = South Carolina)"
+LLP_Cone_Crop_Monitoring_Site_Locations.csv,County (Parish in LA),,,"county where site is located (e.g., Okaloosa County)"
+LLP_Cone_Crop_Monitoring_Site_Locations.csv,Site of the Cooperating Partner,,,"site may be designated by the name of cooperating partner (e.g., Eglin Air Force Base)"
+LLP_Cone_Crop_Monitoring_Site_Locations.csv,Stand,,,"name and description of the stand where field data were collected (e.g., Shelterwood #2, South of Rattlesnake Road)"
+LLP_Cone_Crop_Monitoring_Site_Locations.csv,Latitude-North,decimal degrees,0.000001,latitude (decimal degrees)
+LLP_Cone_Crop_Monitoring_Site_Locations.csv,Longitude-West,decimal degrees,0.000001,longitude (decimal degrees)
+LLP_Cone_Crop_Monitoring_Site_Locations.csv,Notes,,,"additional important notes (e.g., accuracy of longitude/latitude)"
+,,,,
+LLP_DBH_by_Tree-Site-Year_1989-2024.csv,Site,,,name of forest or location where data were collected; stand name may also be included when multiple stands on same site
+LLP_DBH_by_Tree-Site-Year_1989-2024.csv,Tree #,,,tree ID unique within each site
+LLP_DBH_by_Tree-Site-Year_1989-2024.csv,[YYYY],inches,0.1,diameter at breast height of each sampled LLP tree during spring of each year (where year [YYYY] = 2024 to 1989) ('dead' used to denote tree is dead; blank indicates no sampling occured)
+,,,,
+LLP_Green_Cone_Count_by_Tree-Site-Year_1989-2024.csv,Site,,,name of forest or location where data were collected; stand name may also be included when multiple stands on same site
+LLP_Green_Cone_Count_by_Tree-Site-Year_1989-2024.csv,Tree #,,,tree ID unique within each site
+LLP_Green_Cone_Count_by_Tree-Site-Year_1989-2024.csv,[YYYY],cone count,1,number of green cones on each sampled LLP tree during spring of each year (where year [YYYY] = 2024 to 1989) ('dead' used to denote tree is dead; blank indicates no sampling occured)
+,,,,
+LLP_Regional_Summary_ConeProd_1958-2024.csv,Year,,,year of sampling (ranges from 1958 to 2024)
+LLP_Regional_Summary_ConeProd_1958-2024.csv,[SITE],cone count,0.1,"average number of cones per LLP tree forecasted for fall (October) with estimates based on green cone counts during spring (April to June) of each year (where [SITE] is the name of forest or location where data were collected - see \Data\LLP_Cone_Crop_Monitoring_Site_Locations.csv). CAUTION: The calculation for the 'Southern Region' represent the average of all 11 sampled sites from 1975-present, except for 1990. Unfortunately we do not know why the averages for 1990 and 1966-1974 are not averages of all 11 locations – but left as provided by original author Bill.)"
+,,,,
+LLP_Regional_Summary_ConeProd_Quality_1958-2024.csv,Site,,,name of forest or location where data were collected; stand name may also be included when multiple stands on same site
+LLP_Regional_Summary_ConeProd_Quality_1958-2024.csv,Year,,,year of sampling (ranges from 1958 to 2024)
+LLP_Regional_Summary_ConeProd_Quality_1958-2024.csv,Cone Production,cone count,0.1,average number of cones per LLP tree forecasted for fall (October) with estimates based on green cone counts during spring (April to June)
+LLP_Regional_Summary_ConeProd_Quality_1958-2024.csv,Failed Crop,,,"was this a Failed cone crop year = less than 10 cones per tree? (1 = yes, blank = no)"
+LLP_Regional_Summary_ConeProd_Quality_1958-2024.csv,Poor Crop,,,"was this a Poor cone crop year = 10 to 24 cones per tree? (1 = yes, blank = no)"
+LLP_Regional_Summary_ConeProd_Quality_1958-2024.csv,Fair Crop,,,"was this a Fair cone crop = 25 to 49 cones per tree? (1 = yes, blank = no)"
+LLP_Regional_Summary_ConeProd_Quality_1958-2024.csv,Good Crop,,,"was this a Good cone crop year = 50 to 99 cones per tree? (1 = yes, blank = no)"
+LLP_Regional_Summary_ConeProd_Quality_1958-2024.csv,Bumper Crop,,,"was this a Bumper cone crop year = 100 or more cones per tree? (1 = yes, blank = no)"
+LLP_Regional_Summary_ConeProd_Quality_1958-2024.csv,Notes,,,notes regarding sampling location or other important information
+,,,,
+LLP_Regional_Summary_ConeProd_Quality_Graphs_1958-2024.xlsx,Site (worksheet name),,,name of forest or location where data were collected; stand name may also be included when multiple stands on same site
+LLP_Regional_Summary_ConeProd_Quality_Graphs_1958-2024.xlsx,Year,,,year of sampling (ranges from 1958 to 2024)
+LLP_Regional_Summary_ConeProd_Quality_Graphs_1958-2024.xlsx,Cone Production,cone count,0.1,average number of cones per LLP tree forecasted for fall (October) with estimates based on green cone counts during spring (April to June)
+LLP_Regional_Summary_ConeProd_Quality_Graphs_1958-2024.xlsx,Failed Crop,,,"was this a Failed cone crop year = less than 10 cones per tree? (1 = yes, blank = no)"
+LLP_Regional_Summary_ConeProd_Quality_Graphs_1958-2024.xlsx,Poor Crop,,,"was this a Poor cone crop year = 10 to 24 cones per tree? (1 = yes, blank = no)"
+LLP_Regional_Summary_ConeProd_Quality_Graphs_1958-2024.xlsx,Fair Crop,,,"was this a Fair cone crop = 25 to 49 cones per tree? (1 = yes, blank = no)"
+LLP_Regional_Summary_ConeProd_Quality_Graphs_1958-2024.xlsx,Good Crop,,,"was this a Good cone crop year = 50 to 99 cones per tree? (1 = yes, blank = no)"
+LLP_Regional_Summary_ConeProd_Quality_Graphs_1958-2024.xlsx,Bumper Crop,,,"was this a Bumper cone crop year = 100 or more cones per tree? (1 = yes, blank = no)"
+LLP_Regional_Summary_ConeProd_Quality_Graphs_1958-2024.xlsx,Notes,,,notes regarding sampling location or other important information
+,,,,
+Pollen_Record_at_EscambiaEF_1957-2013.csv,Site,,,name of forest or location where data were collected
+Pollen_Record_at_EscambiaEF_1957-2013.csv,Year,,,year sampled (ranges from 1957 to 2013); pollen study was terminated after data collection in 2013
+Pollen_Record_at_EscambiaEF_1957-2013.csv,Grains per cm2,square centimeters,10,"total pollen count per square centimeter, estimated from metal microscope slides with sticky tape afixed to them placed into a pollen trap, summing ten 100x microscope fields (cm²)"
+Pollen_Record_at_EscambiaEF_1957-2013.csv,Days after 1-Jan,number of days,1,number of days after January 1 that sampling occurred
+Pollen_Record_at_EscambiaEF_1957-2013.csv,Peak Shedding Date,,,day of the year estimated to have the highest pollen counts
+Pollen_Record_at_EscambiaEF_1957-2013.csv,Days for 80% Shed,number of days,1,number of days required for 80% of the total LLP pollen to become shed
+Pollen_Record_at_EscambiaEF_1957-2013.csv,Quality of the Next Year Cone Crop,,,information about the quality of next year's cone crop (Bumper crop = 100 or more cones per tree; Good crop = 50 to 99 cones per tree; Fair crop = 25 to 49 cones per tree; Poor crop = 10 to 24 cones per tree; Failed crop = less than 10 cones per tree)
+Pollen_Record_at_EscambiaEF_1957-2013.csv,Pollen Shed,,,"magnitude of pollen shed (High pollen shed = 20,000 or more grains per cm²; Good pollen shed = 10,000 to 19,999 grains per cm²; Modest pollen shed = 5,000 to 9,999 grains per cm²; Low pollen shed = less than 5,000 grains per cm²)"

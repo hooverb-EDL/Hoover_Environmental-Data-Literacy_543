@@ -17,10 +17,10 @@ execute:
 For this topic we will use some example data from the [Rice Rivers Center](https://ricerivers.vcu.edu).  These data represent both atmospheric and water data collected from instrumentation on-site.  I have stored these data in a spreadsheet that is shared on Google Drive as a CSV file.
 
 ```{r}
-library( tidyverse )
+library(tidyverse)
 url <- "https://docs.google.com/spreadsheets/d/1Mk1YGH9LqjF7drJE-td1G_JkdADOU0eMlrP01WFBT8s/pub?gid=0&single=true&output=csv"
-rice <- read_csv( url )
-summary( rice )
+rice <- read_csv(url)
+summary(rice)
 ```
 
 These data represent measurements taken every 15 minutes, 24 hours a day, 7 days a week, 365 days a year.  For brevity, this file contains measurements starting at `r rice$DateTime[1]` and ending at `r rev(rice$DateTime)[1]` (only `r nrow(rice)` records here...).

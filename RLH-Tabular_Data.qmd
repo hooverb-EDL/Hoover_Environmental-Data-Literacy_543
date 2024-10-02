@@ -1,0 +1,130 @@
+---
+title: "Pinus palustris Tabular Practice"
+author: "Rebecca Hoover"
+title-block-style: default
+title-block-banner: images/pinus.jpg
+date: "10/01/2024"
+abstract: "In this assignment, we will be practicing the fundamental workflow for data analytics, which includes data collection, data visualization, data transformation, and communication. This document contains recently published datasets from the United States Department of Agriculture's long-term study on the number of green cones per tree in the Southeast Region of the United States, produced by mature trees. The data is represented using two comma-separated-value files. Overall, this assignment focuses on practicing data manipulation to transform the data for environmental communication and public engagement."
+format: html
+editor: visual
+smooth-scroll: true
+---
+
+## Introduction
+
+The Longleaf Pine, or Pinus palustris, used to cover over 90 million acres in the Southeastern United States. Thanks to restoration and silvicultural practices, efforts are being made to bring back this species from the brink of extinction and focus on long-term management. Some factors that contributed to the delcine of this tree include, fire suppression, development, logging and the infestation of pests including the southern pine park beetle and the overbrowsing of mammals such as deer. The Longleaf Pine is home to nearly 600 species of flora and fauna, including the endangered red-cockaded woodpecker. The United States Department of Agriculture has initiated the Longleaf Pine Initiative to improve the sustainability of this species and increase its growth from 3 million acres to nearly 5 million acres across the Southeastern region. Data from the USDA's Research Data Archive reveals that the main types of data collected were tree diameter by breast height and green cone count by tree. This data spans from 1989 to the present, providing insight into the ecological production of the Longleaf Pine over time. However, it is important to note that data was collected in the Escambia Experimental Forest in Alabama during the annual spring since 1958!
+
+## Methods
+
+When working with tabular data, it's important to start by importing the necessary packages such as tidyverse, lubridate, knitr, and kableExtra to access the required functions. Next, you should read the comma-separated files using their respective URL identifiers, and handle empty cells by using the na.strings function. The study originated in the Escambia Experimental Forest in Alabama and has since expanded to other Southeastern states including Florida, Georgia, Louisiana, North Carolina, and South Carolina (in alphabetical order). "Annual average cone production is provided for 11 sites ranging from 1958 to 2024 (data collection at most sites began in the late 1960s). Also included are annual diameter at breast height (DBH) measurements collected for 10-50 longleaf pine trees in each of 25 different stands (amongst the 11 different sites), as well as green cone production counts for individual longleaf pine trees in 35 stands from 1989-2024. Data from the 1957-2013 Escambia Experimental Forest Pollen Production Study are also provided, which includes measurements such as annual pollen grain counts, date of highest pollen count, and quality of next year's cone crop based on number of green cones found per tree." ((Boyer et al., (2024)) The data was collected by the U.S. government and is public information that can be accessed without any additional permissions or fees. There are a total of 18 publications related to this study, all of which can be accessed using the DOI links provided in the citations section of this assignment.
+
+```{r, message= FALSE}
+# Read in Packages
+
+library(tidyverse)
+library(lubridate)
+library(knitr)
+library(kableExtra)
+
+#DBH Data set 
+
+url <- "~/Downloads/Data Literacy/EDL-ENVS543/Hoover_Environmental-Data-Literacy_ENVS-543/Long-leaf Pine Practice/RDS-2024-0040/Data/LLP_DBH_by_Tree-Site-Year_1989-2024.csv"
+
+read_csv( url, 
+          na = c ("", "NA", "null", "missing", "dead") ) -> long_dbh
+
+#names( long_dbh )
+
+#Green Cone Count by Tree
+
+url_2 <- "~/Downloads/Data Literacy/EDL-ENVS543/Hoover_Environmental-Data-Literacy_ENVS-543/Long-leaf Pine Practice/RDS-2024-0040/Data/LLP_Green_Cone_Count_by_Tree-Site-Year_1989-2024.csv"
+
+read_csv( url_2, 
+          na = c ("", "NA", "null", "missing", "dead","C","o", "v","i","d","P","a","n","d","e","m","i","c","obscure") ) -> long_cone_count
+
+#names( long_cone_count )
+
+##names: the column names are the same for both csv files
+```
+
+## Results {<style>="" .scrollable-table-container {="" max-height: 300px;  /* Set the maximum height */="" overflow-y: auto;   /* Enable vertical scrolling */="" border: 1px solid #ccc;  /* Optional border */="" border-radius: 5px;  /* Optional rounded corners */="" margin-bottom: 20px; /* Space below the table */="" }="" ="" .scrollable-table {="" width: 100%;                /* Full width */="" border-collapse: collapse;  /* Collapse borders */="" }="" ="" .scrollable-table th, .scrollable-table td {="" padding: 8px;              /* Padding for cells */="" text-align: left;          /* Left align text */="" border-bottom: 1px solid #ddd; /* Bottom border for rows */="" white-space: normal;       /* Allow text to wrap */="" word-wrap: break-word;     /* Break long words */="" }="" ="" .scrollable-table th {="" background-color: #f2f2f2; /* Header background */="" }="" </style>=""}
+
+For the results section of this assignment, I need to reformat the data into a tabular form that is readable and suitable for future data analysis. I plan to separate the site data into state, location, and location descriptions. Additionally, I aim to assign each tree its own individual ID number. In the future, it would be great to obtain precise GPS coordinates for the trees, which can be achieved using technologies like the Trimble unit. This will allow us to format the data in a way that enables us to visualize it geospatially and track individual tree growth over time.
+
+In this section, we will analyze the results of the data transformation process. However, we will focus on the data from the last 10 years in order to make informed inferences about the recent growth of Pinus palustris. This is in reference to the majority of restoration projects, which typically involve a 10-year growth study.
+
+```{r, message=FALSE}
+
+
+#Load more packages
+library(dplyr)
+library(tidyr)
+library(stringr)
+
+#Tidying the Data into Tabular Form
+
+##Tidy the DBH Data
+
+# Reshape the data to long format 
+long_dbh_long <- long_dbh %>%
+  pivot_longer(cols = starts_with(c("2014", "2015", "2016", "2017", "2018",
+                                    "2019", "2020", "2021", "2022", "2023", "2024")), 
+               names_to = "Year", 
+               values_to = "DBH")
+
+# Calculate the average DBH by year and location
+average_dbh <- long_dbh_long %>%
+  group_by(Site, Year) %>%
+  summarise(average_dbh = mean(DBH, na.rm = TRUE)) %>%
+  ungroup()
+
+# Pivot the data to wide format
+average_dbh_wide <- average_dbh %>%
+  pivot_wider(names_from = Year, values_from = average_dbh)
+
+#Replace NaN with a dash
+
+average_dbh_wide <- average_dbh_wide %>%
+  mutate(across(everything(), ~ ifelse(is.nan(.), "-", .)))
+
+# Print the table
+average_dbh_wide |> 
+  kable()
+
+##Tidy the Cone Count Data
+
+# Reshape the data to long format 
+long_cone_count_long <- long_cone_count %>%
+  pivot_longer(cols = starts_with(c("2014", "2015", "2016", "2017", "2018",
+                                    "2019", "2020", "2021", "2022", "2023", "2024")), 
+               names_to = "Year", 
+               values_to = "Cone_Count")
+
+# Calculate the average DBH by year and location
+average_cone_count <- long_cone_count_long %>%
+  group_by(Site, Year) %>%
+  summarise(average_cone_count = mean(Cone_Count, na.rm = TRUE)) %>%
+  ungroup()
+
+# Pivot the data to wide format
+average_cone_count_wide <- average_cone_count %>%
+  pivot_wider(names_from = Year, values_from = average_cone_count)
+
+#Replace NaN with a dash
+
+average_cone_count_wide <- average_cone_count_wide %>%
+  mutate(across(everything(), ~ ifelse(is.nan(.), "-", .)))
+
+# Print the table
+average_cone_count_wide |> 
+  kable()
+
+
+###Future Coding Efforts: Join these tables together to generate visual representations that illustrate the spatio-temporal relationships and patterns within the data.
+```
+
+## Citations
+
+-   Boyer, William D.; Brockway, Dale G.; Willis, John L. 2024. Longleaf pine regional cone production study. Fort Collins, CO: Forest Service Research Data Archive. https://doi.org/10.2737/RDS-2024-0040
+
+-   *Longleaf Pine Initiative*. Natural Resources Conservation Service. (2023, December 19). https://www.nrcs.usda.gov/programs-initiatives/longleaf-pine-initiative
