@@ -1,4 +1,4 @@
-getRiceData <- fucntion() {
+getRiceData <- function() {
   
 }
 
@@ -8,9 +8,39 @@ url <- "https://docs.google.com/spreadsheets/d/1Mk1YGH9LqjF7drJE-td1G_JkdADOU0eM
 
 read_csv(url) -> rice
 
-# make date object
-# make month and weekly object
-# convert F -> C
+library(lubridate)
+library(tidyverse)
+library(knitr)
+library(kableExtra)
+
+rice |>
+  mutate(H2O_Temp = 1.8*H2O_TempC+32) |>
+  select(-H2O_TempC) |>
+  select( DateTime, H2O_Temp, AirTempF, Rain_in) |>
+  mutate( Date = mdy_hms (DateTime, tz="EST")) |>
+  mutate(Weekday = wday(Date,
+                        label = TRUE,
+                        abbr = FALSE)) |>
+  group_by( Weekday ) |>
+  summarise("Water Temp" = mean(H2O_Temp, na.rm = TRUE),
+            "Air Temp" = mean (AirTempF),
+            "Rain" = mean (Rain_in)) |>
+  kable() |>
+  kable_material_dark()
+
+## make date object
+#Date Field
+#Time Field
+
+## make month and weekly object
+#Month
+#Week
+
+
+## convert F -> C
+#H2O Temp
+
+
 # get rid of extra date
 # reorder the columns
 

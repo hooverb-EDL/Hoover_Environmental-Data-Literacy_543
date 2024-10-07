@@ -1,0 +1,88 @@
+---
+title: "In Class Functions Activity"
+author: "Rebecca Hoover"
+title-block-banner: true
+date: "10/03/2024"
+smooth-scroll: true
+format: html
+editor: visual
+---
+## Step 1 : Reading in Data and Packages
+
+```{r, message=FALSE}
+#Basic Function Formula
+
+getRiceData <- function() {
+  
+}
+
+#Read in packages
+
+library(lubridate)
+library(tidyverse)
+library(knitr)
+library(kableExtra)
+
+url <- "https://docs.google.com/spreadsheets/d/1Mk1YGH9LqjF7drJE-td1G_JkdADOU0eMlrP01WFBT8s/pub?gid=0&single=true&output=csv"
+
+read_csv(url) -> rice
+
+```
+
+## Step 2 : Manipulationg the Data
+
+```{r}
+
+## (1) Make Date Object
+rice$DateTime <- as.POSIXct(rice$DateTime, format= "%m/%d/%Y %I:%M:%S %p") #???
+
+# (2) Create Month, Day, and Weekday Objects
+rice <- rice %>%
+  mutate(Month = factor(month(DateTime), 
+                        levels = 1:12, labels = sprintf("%02d", 1:12), ordered = TRUE),
+    Day = day(DateTime),
+    Weekday = factor(weekdays(DateTime), 
+                     levels = c("Sunday", 
+                                "Monday", 
+                                "Tuesday", 
+                                "Wednesday", 
+                                "Thursday", 
+                                "Friday", 
+                                "Saturday"), 
+                     ordered = TRUE)
+  )
+
+# (3) Convert Fahrenheit to Celsius and inches to centimeters
+rice <- rice %>%
+  mutate(
+    AirTempC = (AirTempF - 32) * 5/9,
+    Rain_cm = Rain_in * 2.54
+  )
+
+# (4) Remove unnecessary columns
+rice <- rice %>%
+  select(-RecordID, 
+         -WindSpeed_mph, 
+         -RelHumidity, 
+         -AirTempF, 
+         -PH_mv, 
+         -Rain_in, 
+         -Depth_ft)
+
+# (5) Reorder the Columns
+rice <- rice %>% select(DateTime, 
+                        Month, 
+                        Day, 
+                        Weekday, 
+                        everything())
+
+```
+
+## Data Output ( Large Dataset )
+
+```{r}
+#return ( rice )
+rice |>
+  kable()
+
+```

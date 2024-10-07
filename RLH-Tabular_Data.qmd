@@ -28,7 +28,7 @@ library(kableExtra)
 
 #DBH Data set 
 
-url <- "~/Downloads/Data Literacy/EDL-ENVS543/Hoover_Environmental-Data-Literacy_ENVS-543/Long-leaf Pine Practice/RDS-2024-0040/Data/LLP_DBH_by_Tree-Site-Year_1989-2024.csv"
+url <- " Downloads/Data Literacy/EDL-ENVS543/Hoover_Environmental-Data-Literacy_ENVS-543/Long-leaf Pine Practice/RDS-2024-0040/Data/LLP_DBH_by_Tree-Site-Year_1989-2024.csv"
 
 read_csv( url, 
           na = c ("", "NA", "null", "missing", "dead") ) -> long_dbh
