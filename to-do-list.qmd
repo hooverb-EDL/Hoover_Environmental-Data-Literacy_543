@@ -8,11 +8,9 @@ editor: visual
 
 -   Brush up on Primary and Secondary Assessments
 
--   Brush up on care for splints, and musculoskeletal injury
+-   Brush up on care for splints, and mus culoskeletal injury
 
 ## Forest Ecology
-
--   Humpback Rocks tomorrow
 
 -   Review notes, tests and labs
 
@@ -30,11 +28,11 @@ editor: visual
 
 ## Environmental Data Literacy
 
--   Functions homework
-
--   help angela
-
 -   Final Project -\> Review
+
+-   Group Project
+
+-   Ggplot -\> Get Ahead
 
 ## FWS Internship / ORC Manager
 
@@ -44,12 +42,18 @@ editor: visual
 
 -   Chili Cook off
 
--   Update Book of Knowledge
-
--   Start researching grants
-
 -   Meet with October manager
 
--   onboarding slide deck
+### Deliverable(s)
 
--   Vtop modules
+-   Update Book of Knowledge
+
+-   Update Vehicle Binders
+
+-   Competencies
+
+-   Researching Grants for OAP
+
+-   On boarding Slide Deck
+
+-   VTOP Module Completion
