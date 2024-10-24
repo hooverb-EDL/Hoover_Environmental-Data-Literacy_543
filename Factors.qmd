@@ -1,0 +1,186 @@
+---
+title: "Factors In-Class Activity"
+author: "Rebecca Hoover"
+title-block-banner: true
+date: "10/24/2024"
+abstract: "For this Assignment I have included the previous mutations, so that I can conceptulize the coding process into 3 steps. To access the Factors Activity all you would need to do is scroll down to Step 3"
+smooth-scroll: true
+format: html
+editor: visual
+editor_options: 
+  chunk_output_type: console
+---
+
+## Step 1 : Load in Packages and Data
+
+```{r, warning=FALSE, message=FALSE}
+#Basic Function Formula
+
+getRiceData <- function() {
+  
+}
+
+#Read in packages
+
+library(lubridate)
+library(tidyverse)
+library(knitr)
+library(dplyr)
+library(ggplot2)
+library(gridExtra)
+library(forcats)
+library(kableExtra)
+
+url <- "https://docs.google.com/spreadsheets/d/1Mk1YGH9LqjF7drJE-td1G_JkdADOU0eMlrP01WFBT8s/pub?gid=0&single=true&output=csv"
+
+read_csv(url) -> rice
+
+
+```
+
+## Step 2 : Previous Mutations
+
+```{r, warning=FALSE, message=FALSE}
+
+## (1) Make Date Object
+rice$DateTime <- as.POSIXct(rice$DateTime, format= "%m/%d/%Y %I:%M:%S %p") #???
+
+# (2) Create Month, Day, and Weekday Objects
+rice <- rice %>%
+  mutate(Month = factor(month(DateTime), 
+                        levels = 1:12, labels = sprintf("%02d", 1:12), ordered = TRUE),
+    Day = day(DateTime),
+    Weekday = factor(weekdays(DateTime), 
+                     levels = c("Sunday", 
+                                "Monday", 
+                                "Tuesday", 
+                                "Wednesday", 
+                                "Thursday", 
+                                "Friday", 
+                                "Saturday"), 
+                     ordered = TRUE)
+  )
+
+# (3) Convert Fahrenheit to Celsius and inches to centimeters
+#rice <- rice %>%
+ # mutate(
+   # AirTempC = (AirTempF - 32) * 5/9,
+   # Rain_cm = Rain_in * 2.54
+ # )
+#The code would look like this but its already in the data?
+
+# (4) Remove unnecessary columns
+rice <- rice %>%
+  select(-RecordID, 
+         -WindSpeed_mph, 
+         -RelHumidity, 
+         -AirTempF, 
+         -PH_mv, 
+         -Rain_in, 
+         -Depth_ft)
+
+# (5) Reorder the Columns
+rice <- rice %>% select(DateTime, 
+                        Month, 
+                        Day, 
+                        Weekday, 
+                        everything())
+```
+
+## Step 3 : Factors Homework
+```{r}
+#Change the order of the weekdays to start with Monday and Add column for Weekday
+
+rice <- rice %>%
+  mutate(Weekday = weekdays(DateTime) %>%
+           as.factor()  %>%
+           fct_relevel("Monday", 
+                       "Tuesday", 
+                       "Wednesday", 
+                       "Thursday", 
+                       "Friday", 
+                       "Saturday", 
+                       "Sunday"))
+
+
+#Add Column for Weekend
+
+rice <- rice %>%
+  mutate(Weekend = fct_collapse(Weekday, 
+                                 Yes = c("Saturday", "Sunday"),
+                                 No = c("Monday", "Tuesday", "Wednesday", 
+                                         "Thursday", "Friday")))
+ 
+#Create Column for Four Primary Lunar Phases
+get_lunar_phase <- function(date) {
+  if (is.na(date)) {
+    return(NA)  
+  }
+  
+  # Calculate days since the reference new moon date
+  days_since_new_moon <- as.numeric(difftime(date, as.POSIXct("2000-01-06"), units = "days")) %% 29.53
+  
+  if (days_since_new_moon < 1.845) {
+    return("New Moon")
+  } else if (days_since_new_moon < 5.536) {
+    return("First Quarter")
+  } else if (days_since_new_moon < 14.765) {
+    return("Full Moon")
+  } else if (days_since_new_moon < 20.974) {
+    return("Last Quarter")
+  } else {
+    return("New Moon")
+  }
+}
+
+# Assuming rice is a data frame with a DateTime column
+rice <- rice %>%
+  mutate(LunarPhase = sapply(DateTime, get_lunar_phase)) %>%
+  mutate(LunarPhase = fct_recode(as.factor(LunarPhase),
+                                  "New Moon" = "New Moon",
+                                  "First Quarter" = "First Quarter",
+                                  "Full Moon" = "Full Moon",
+                                  "Last Quarter" = "Last Quarter"))
+
+
+
+#Create Column for Incoming and Outgoing Tides
+
+rice <- rice %>%
+  mutate(Tide = ifelse(Depth_m > lag(Depth_m, default = first(Depth_m)), "Incoming", "Outgoing"),
+         Tide = fct_recode(Tide, "Outgoing" = "Outgoing", "Incoming" = "Incoming"))
+
+```
+
+# A Cool Table
+
+```{r}
+# Create the kable table
+get_mode <- function(x) {
+  ux <- unique(x)
+  ux[which.max(tabulate(match(x, ux)))]
+}
+
+summary_table <- rice |>
+  select(DateTime, Month, Day, 
+         Weekday, Weekend, LunarPhase, Tide) |>
+  group_by(Weekday) |>
+  summarise(
+    "Lunar Phase" = get_mode(LunarPhase),  
+    "Tide" = get_mode(Tide),
+    "Weekend" = get_mode(Weekend),
+    .groups = 'drop'
+  ) |>
+  filter(!is.na(`Lunar Phase`), !is.na(Tide), !is.na(Weekend)) |>
+  arrange(Weekday)
+
+summary_table |>
+  kable( caption = "Most Common Lunar Phase and Tide to Each Weekday" ) |>
+  kable_material_dark()
+```
+
+
+
+
+
+

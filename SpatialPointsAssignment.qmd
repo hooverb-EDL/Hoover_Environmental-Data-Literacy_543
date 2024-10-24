@@ -1,9 +1,16 @@
 ---
 title: "In Class Activity"
-format: 
-  html:
-    code-tools: true
-    toc: false
+format: html
+author: "Rebecca Hoover"
+title-block-style: default
+title-block-banner: images/beetle-skin.png
+date: "10/01/2024"
+abstract: "Abstract here."
+smooth-scroll: true
+code-tools: true
+toc: false
+editor_options: 
+chunk_output_type: console
 ---
 
 <center>
@@ -21,26 +28,7 @@ This homework is a bit quick but is designed to make sure that:
 The following code defines the set of necessary libraries for the next few weeks and then figures out which (potential) subset you need to install. It then installs them all in one call.  It will not load them into your session, you'll have to do that later in your code chunks.
 
 ```{r}
-needed_libraries <- c("sf",
-                      "maps",
-                      "units",
-                      "rgdal",
-                      "rgeos",
-                      "GGally",
-                      "raster",
-                      "mapproj",
-                      "leaflet",
-                      "rnaturalearth",
-                      "rnaturalearthdata"
-                      )
-# Determines which libraries you do not have
-#   already installed.
-need_inst <- setdiff( needed_libraries, 
-                      rownames( installed.packages()) )
-# Instrall the neccessary ones.
-if( length( need_inst ) ) {
-  install.packages( need_inst, dependencies = TRUE )
-}
+
 ```
 
 
@@ -51,6 +39,7 @@ The data for this is some site-level data from the Sonoran Desert bark beetle.  
 
 ```{r}
 url <- "https://raw.githubusercontent.com/dyerlab/ENVS-Lectures/master/data/Araptus_Disperal_Bias.csv"
+
 ```
 
 

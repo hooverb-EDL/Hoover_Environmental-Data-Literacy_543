@@ -7,6 +7,7 @@ smooth-scroll: true
 format: html
 editor: visual
 ---
+
 ## Step 1 : Reading in Data and Packages
 
 ```{r, message=FALSE}
@@ -29,7 +30,7 @@ read_csv(url) -> rice
 
 ```
 
-## Step 2 : Manipulationg the Data
+## Step 2 : Manipulating the Data
 
 ```{r}
 

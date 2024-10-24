@@ -47,7 +47,12 @@ read_csv( url_2,
 ##names: the column names are the same for both csv files
 ```
 
-## Results {<style>="" .scrollable-table-container {="" max-height: 300px;  /* Set the maximum height */="" overflow-y: auto;   /* Enable vertical scrolling */="" border: 1px solid #ccc;  /* Optional border */="" border-radius: 5px;  /* Optional rounded corners */="" margin-bottom: 20px; /* Space below the table */="" }="" ="" .scrollable-table {="" width: 100%;                /* Full width */="" border-collapse: collapse;  /* Collapse borders */="" }="" ="" .scrollable-table th, .scrollable-table td {="" padding: 8px;              /* Padding for cells */="" text-align: left;          /* Left align text */="" border-bottom: 1px solid #ddd; /* Bottom border for rows */="" white-space: normal;       /* Allow text to wrap */="" word-wrap: break-word;     /* Break long words */="" }="" ="" .scrollable-table th {="" background-color: #f2f2f2; /* Header background */="" }="" </style>=""}
+\## Results {
+
+```{=html}
+<style>="" .scrollable-table-container {="" max-height: 300px;  /* Set the maximum height */="" overflow-y: auto;   /* Enable vertical scrolling */="" border: 1px solid #ccc;  /* Optional border */="" border-radius: 5px;  /* Optional rounded corners */="" margin-bottom: 20px; /* Space below the table */="" }="" ="" .scrollable-table {="" width: 100%;                /* Full width */="" border-collapse: collapse;  /* Collapse borders */="" }="" ="" .scrollable-table th, .scrollable-table td {="" padding: 8px;              /* Padding for cells */="" text-align: left;          /* Left align text */="" border-bottom: 1px solid #ddd; /* Bottom border for rows */="" white-space: normal;       /* Allow text to wrap */="" word-wrap: break-word;     /* Break long words */="" }="" ="" .scrollable-table th {="" background-color: #f2f2f2; /* Header background */="" }="" </style>
+```
+=""}
 
 For the results section of this assignment, I need to reformat the data into a tabular form that is readable and suitable for future data analysis. I plan to separate the site data into state, location, and location descriptions. Additionally, I aim to assign each tree its own individual ID number. In the future, it would be great to obtain precise GPS coordinates for the trees, which can be achieved using technologies like the Trimble unit. This will allow us to format the data in a way that enables us to visualize it geospatially and track individual tree growth over time.
 
