@@ -1,11 +1,11 @@
 ---
-title: "In Class Activity"
+title: "Spatial In Class Activity"
 format: html
 author: "Rebecca Hoover"
 title-block-style: default
 title-block-banner: images/beetle-skin.png
 date: "10/01/2024"
-abstract: "Abstract here."
+abstract: "For this assignment, we practiced coding geospatial data with a focus on the habitat suitability and sex ratio of Sonoran Desert Bark Beetles."
 smooth-scroll: true
 code-tools: true
 toc: false
@@ -27,8 +27,38 @@ This homework is a bit quick but is designed to make sure that:
 
 The following code defines the set of necessary libraries for the next few weeks and then figures out which (potential) subset you need to install. It then installs them all in one call.  It will not load them into your session, you'll have to do that later in your code chunks.
 
-```{r}
+```{r, message=FALSE, warning=FALSE}
+options(repos = c(CRAN = "https://cloud.r-project.org/")) # ran into mirror issues
 
+needed_libraries <- c("sf",
+                      "maps",
+                      "units",
+                      "rgdal", #not available in the version of R
+                      "rgeos", #not available in the version of R
+                      "GGally",
+                      "raster",
+                      "mapproj",
+                      "leaflet",
+                      "rnaturalearth",
+                      "rnaturalearthdata"
+                      )
+# Determines which libraries you do not have
+#   already installed.
+need_inst <- setdiff( needed_libraries, 
+                      rownames( installed.packages()) )
+# Install the necessary ones.
+if( length( need_inst ) ) {
+  install.packages( need_inst, dependencies = TRUE )
+  library(dplyr)
+  library(geosphere)
+  library(ggplot2)
+  library(leaflet)
+  library(sf)
+  library(tidyverse)
+  library(scales)
+  library(viridis)
+  
+}
 ```
 
 
@@ -37,8 +67,12 @@ The following code defines the set of necessary libraries for the next few weeks
 
 The data for this is some site-level data from the Sonoran Desert bark beetle.  The URL is in the next chunk, and is currently being hosted on my class [Github repository](https://github.com/dyerlab/ENVS-Lectures).  Load it in.
 
-```{r}
+```{r, message=FALSE, warning=FALSE}
 url <- "https://raw.githubusercontent.com/dyerlab/ENVS-Lectures/master/data/Araptus_Disperal_Bias.csv"
+
+beets <- read_csv(url)
+
+#head(beets) #looking at data #hastagged out for the sake of my html
 
 ```
 
@@ -51,6 +85,19 @@ There is a great tutorial [here](https://rstudio.github.io/leaflet/map_widget.ht
 
 ```{r}
 # make a quick leaflet map here to get an idea of 
+
+beets <- beets %>%
+  mutate(Label = paste ("Site:", Site, 
+                        "<br>Males:", Males, 
+                        "<br>Females:", Females, 
+                        "<br> Suitability:", Suitability))
+
+leaflet (beets) %>%
+  addMarkers (~Longitude, 
+              ~Latitude, 
+              popup = ~Label,
+              ) %>% 
+  addProviderTiles("Esri.NatGeoWorldMap")
 ```
 
 ### Converting to `sf` Objects
@@ -58,8 +105,15 @@ There is a great tutorial [here](https://rstudio.github.io/leaflet/map_widget.ht
 Convert the spatial data in the beetle data.frame into an `sf` object.  Make sure you set the Coordinate Reference System to $4326$.
 
 
-```{r}
+```{r, message=FALSE, warning=FALSE}
 # convert raw data to simple features in your data.frame
+
+sf_beets <- beets %>%
+  st_as_sf (coords = c("Longitude", 
+                       "Latitude"), 
+            crs = 4326)
+
+#head(sf_beets) #looking at data #hastagged out for the sake of my html
 ```
 
 
@@ -68,20 +122,99 @@ Convert the spatial data in the beetle data.frame into an `sf` object.  Make sur
 For these questions, you may want to look at the `sf` cheat sheet [here](https://github.com/rstudio/cheatsheets/raw/main/sf.pdf) to find the appropriate geospatial function.
 
 1. How far apart (in km) are the sites Constitución (`const`) and San Francisquito (`sfran`)?  
+```{r}
+beets_sf <- st_as_sf(beets, coords = c("Longitude", 
+                                       "Latitude"), 
+                     crs = 4326)
 
+const_coords <- beets_sf[beets_sf$Site == "const", ]
+sfran_coords <- beets_sf[beets_sf$Site == "sfran", ]
+
+distance_km <- st_distance(const_coords, sfran_coords, by_element = TRUE) / 1000  # converting variables
+
+print(distance_km)
+
+```
 2. Is there a correlation between habitat suitability and the ratio of males to female beetles sampled at each locale?  
+```{r}
+beets <- beets %>%
+  mutate(sex_ratio = Males / Females)
+
+
+cor_test <- cor.test(beets$Suitability, beets$sex_ratio)
+
+print(cor_test)
+
+```
+
+**Yes there is a correlation between habitat suitabilty and the sex ratio of Sonoran Desert Bark Beetles. In this case we woudl reject the nulll hypothese that wthere was no correlation. (P-value = 0.02589, siglvl = 0.05)**
 
 3. Make a plot using `ggplot` of the data with suitability as the size of the points and the sex ratio as the fill color.
+```{r}
+beets <- beets %>%
+  mutate(sex_ratio = Males / Females)
+
+ggplot(beets, aes(x = Longitude, 
+                  y = Latitude, 
+                  size = Suitability, 
+                  color = sex_ratio)) +
+  geom_point() +
+  scale_color_viridis_c(option = "C")+  #Color Blind Friendly
+  theme_minimal() +  
+  labs(title = "Sonoran Desert Bark Beetle Suitability and Male/Female Ratio",
+       x = "Longitude", 
+       y = "Latitude", 
+       color = "Sex Ratio", 
+       size = "Suitability")
+
+#Cool Map
+
+size_range <- c(1, 10)
+
+leaflet(beets) %>%
+  addProviderTiles("Esri.WorldGrayCanvas") %>%  
+  addCircleMarkers(
+    ~Longitude, ~Latitude,
+    radius = (rescale(beets$Suitability, to = size_range)),  
+    color = ~viridis::viridis(100)[as.numeric(cut(sex_ratio, breaks = 100))], 
+    popup = ~paste("Suitability:", Suitability, "<br>",
+                   "Sex Ratio:", sex_ratio)  
+  ) %>%
+  addLegend(position = "bottomright", 
+            pal = colorNumeric(palette = viridis(100), domain = beets$sex_ratio),
+            values = ~sex_ratio,
+            title = "Sex Ratio") %>%
+  addControl("Sonoran Desert Bark Beetle Suitability and Male/Female Ratio", 
+             position = "topright", 
+             className = "map-title")
+```
 
 4. Reproject the data and plot it again using an EPSG code defined for Mexico UTM zone 12N (see [epgs.io](https://epsg.io) for projections).
+```{r}
+sf_beets <- beets %>%
+  st_as_sf(coords = c("Longitude", "Latitude"), crs = 4326)
 
+utm_beets <- st_transform(sf_beets, crs = 32612)
+
+
+ggplot(utm_beets) +
+  geom_sf(aes(size = Suitability,
+              color = Suitability,
+              alpha = 0.5)) + 
+  scale_size_continuous(name = NULL) +
+  scale_color_viridis_c(option = "C")+  #Color Blind Friendly
+  theme_minimal() +
+  guides(alpha = "none",
+         Suitability = "") +  
+  labs(title = "Reprojected Sonoran Desert Bark\nBeetle Suitability (UTM Zone 12N)", 
+       x = "Latitude", y = "Longitude")
+```
 
 
 ```{r}
 #| echo: false
 cor.response <- cor.test( iris$Petal.Length, iris$Sepal.Width)
 ```
-
 
 We failed to find a significant relationship between sepal length and width (Pearson Correlation, $\rho$ = `r cor.response$estimate`, P = `r cor.response$p.value`).
 

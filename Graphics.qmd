@@ -87,7 +87,7 @@ rice <- rice %>% select(DateTime,
                         everything())
 ```
 
-# Graphics 
+# Graphics
 
 ## Step 3 : Graphics Homework (Have one R plot and one ggplot for each prompt)
 
