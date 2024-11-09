@@ -14,7 +14,9 @@ editor_options:
 chunk_output_type: console
 ---
 
+
 ## Data and Loaded Packages
+
 
 ```{r, message=FALSE, warning=FALSE}
 #Load in Packages
@@ -28,9 +30,11 @@ raster_url <- "https://github.com/DyerlabTeaching/Raster-Data/raw/main/data/alt_
 beetle_url <- "https://raw.githubusercontent.com/DyerlabTeaching/Raster-Data/main/data/AraptusDispersalBias.csv"
 ```
 
+
 ## Running Code
 
 1. Load the raster and point data in and crop to an appropriate size to display the locations of the sampling plots and make a label for each site.
+
 
 ```{r, message=FALSE, warning=FALSE}
 
@@ -66,7 +70,9 @@ baja_elev %>%
                  data = beetles) +
   coord_equal()
 ```
+
 2. Use the click() function to crop the raster and filter the sites to include only the region that is on the peninsula of Baja California. Plot the raster and sites as labels.
+
 ```{r}
 
 cape_bound <- c(-116, -109, 22, 30)
@@ -95,7 +101,9 @@ plot(cape_pts, add = TRUE, col = "red", pch = 16, cex = scaled_cex)
 
 text(st_coordinates(cape_pts), labels = cape_pts$Site, pos = 3, cex = 0.7)
 ```
+
 3. The peninsula of Baja California is divided into the States of Baja California Norte and Baja California Sur. The border between these states is at 28° Latitude. Divide the sample locations into groups based upon which state they are located and plot the average sex ratio of the sample sites partitioned by each site.
+
 ```{r, message=FALSE, warning=FALSE}
 beetles <- beetles %>%
   mutate(
@@ -127,7 +135,9 @@ ggplot(state_avg_sex_ratio, aes(x = State,
 ```
 
 
+
 4. Is there a relationship between the observed sex ratio and the elevation at that site? Plot these, and in the text, perform a correlation test (cor.test()) and report the values as if you were writing them up in a results section.
+
 
 ```{r, message=FALSE, warning=FALSE}
 # Extract elevation values at each sampling location
@@ -155,6 +165,7 @@ cat("The correlation between M/F ratio and elevation was r =", round(cor_test$es
 
 
 ```
+
 *A Pearson correlation analysis was conducted to examine the relationship between the male-to-female (M/F) ratio and elevation.*
 
 *The results indicated a very weak negative correlation (r = -0.10), which was not statistically significant (p = 0.58). This implies that there is no meaningful linear relationship between the M/F ratio and elevation within this data set. Given the lack of statistical significance, it is unlikely that elevation is a significant factor influencing the M/F ratio in the current sample. Further studies with larger sample sizes or different analytical methods may be necessary to investigate this relationship more thoroughly. *
