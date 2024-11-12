@@ -1,0 +1,78 @@
+---
+title: "hbdfcv"
+format: html
+editor: visual
+editor_options: 
+  chunk_output_type: console
+---
+
+Open RStudio in your repository for the class
+Create a new Quarto document named "Textual Analysis."
+Add a chunk and load in the libraries tidyverse, readr, and stringr.
+Add the following URL as a variable to grab an external text file.
+
+## Quarto
+
+```{r}
+url <- "https://raw.githubusercontent.com/DyerlabTeaching/Textual-Data/refs/heads/main/data/ENVSclasses.txt?token=GHSAT0AAAAAACWO27UIA46V72P7DBZEP5EKZYZFFXQ"
+
+envs <- read_lines (url)
+head (envs, 25)
+```
+
+
+```{r}
+str_detect(envs, "ENVS") -> idx
+
+envs[idx]
+```
+
+```{r}
+ENVS101 <- envs [1]
+ENVS101
+```
+
+```{r}
+str_view(ENVS101, "ENVS")
+str_view( ENVS101, "Hours")
+str_view (ENVS101, "o")
+
+
+str_view (ENVS101, "[:digit:]")
+str_view (ENVS101, "[:digit:]{3}")
+str_view (ENVS101, "[:digit:]{2,3}")
+
+```
+
+```{r}
+str_view (ENVS101, "[:punct:]")
+
+```
+
+```{r}
+str_view (ENVS101, "[:alpha:]")
+
+```
+
+```{r}
+str_view (ENVS101, "[:lower:]") #or uppercase
+
+```
+
+```{r}
+str_view (ENVS101, "[:space:]")
+
+```
+
+```{r}
+str_view (ENVS101, "[:alpha:]"{4} ["[:digit:]"{3}])
+str_view (ENVS101, "[:upper:]"{4} ["[:digit:]"{3}])
+str_view (ENVS101, "[:lower:]"{4} ["[:digit:]"{3}])
+
+```
+
+```{r}
+str_view (ENVS101, "[A-Z]{4} [0-9]{3}")
+
+```
+

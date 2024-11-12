@@ -4,6 +4,14 @@ format: html
 editor: visual
 ---
 
+## MISC.
+
+-   Talk to Ed about possible Winter Intercession paid position at Rice
+
+    -   Invasive Species Removal
+
+    -   Other Cool Things
+
 ## Wilderness First Responder
 
 -   Brush up on Primary and Secondary Assessments

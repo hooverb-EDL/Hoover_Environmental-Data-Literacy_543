@@ -1,0 +1,104 @@
+---
+title: "Text Data"
+format: html
+author: "Rebecca Hoover"
+title-block-style: default
+title-block-banner: true
+date: "11/12/2024"
+abstract: "In this assignment, we analyzed the course titles of all undergraduate courses offered by VCU Life Sciences. We created a plot to group the courses by program and developed a word cloud to visually showcase some of the courses in an appealing way."
+smooth-scroll: true
+code-tools: true
+toc: false
+editor_options: 
+  chunk_output_type: console
+chunk_output_type: console
+---
+1. A plot of the number of courses at the 100, 200, 300, and 400-level grouped by program. 
+
+```{r, message=FALSE, warning=FALSE}
+# Load required libraries
+library(wordcloud)
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+library(RColorBrewer)
+library(readr)
+
+# Read the data from the URL
+file_path <- 
+  "/Users/rebeccahoover/Downloads/Data Literacy/EDL-ENVS543/Hoover_Environmental-Data-Literacy_ENVS-543/LifeSciencesCurriculum.txt"
+
+# Read the file
+envs <- read_lines(file_path)
+
+# Extract course information 
+course_pattern <- "([A-Z]{4}) (\\d{3})\\. (.+?)\\. (\\d+-?\\d* Hours)"
+matches <- regmatches(envs, gregexpr(course_pattern, envs, perl = TRUE))
+courses <- unlist(matches)
+
+# Convert extracted data to a data frame
+course_data <- data.frame(
+  Program = sub(course_pattern, "\\1", courses),
+  Level = sub(course_pattern, "\\2", courses),
+  Title = sub(course_pattern, "\\3", courses),
+  Credits = sub(course_pattern, "\\4", courses),
+  stringsAsFactors = FALSE
+)
+
+# Add a new column for course level classification
+course_data <- course_data %>%
+  mutate(Course_Level = paste0(substr(Level, 1, 1), "00"))
+
+# Clean Credits column to numeric
+course_data$Credits <- as.numeric(sub(" Hours", "", course_data$Credits))
+
+# Group data for plotting
+course_counts <- course_data %>%
+  group_by(Program, Course_Level) %>%
+  summarize(Count = n(), .groups = "drop") %>%
+  pivot_wider(names_from = Course_Level, values_from = Count, values_fill = list(Count = 0))
+
+# Convert the data to long format for ggplot
+course_counts_long <- course_counts %>%
+  pivot_longer(cols = starts_with("1") | starts_with("2") | starts_with("3") | starts_with("4"), 
+                                  names_to = "Course_Level", 
+                                  values_to = "Count")
+
+# Plotting the number of courses grouped by program and level
+
+
+ggplot(course_counts_long, aes(x = Program, y = Count, fill = Course_Level)) +
+  geom_bar(stat = "identity", position = "stack") +  
+  labs(title = "Number of Courses at Each\n Level Grouped by Program",
+       x = "Program",
+       y = "Number of Courses") +
+  scale_fill_manual(values = c("100" = "#7ad151ff", "200" = "#22A384FF", "300" = "#2A788EFF", "400" = "#440154FF"),
+                    name = "Course Level") +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(
+      family = "Times New Roman", 
+      hjust = 0.5),
+    axis.title.x = element_text(
+      family = "Times New Roman"),
+    axis.title.y = element_text(
+      family = "Times New Roman"),
+    legend.title = element_text(
+      family = "Times New Roman"),
+    legend.text = element_text(
+      family = "Times New Roman"))
+```
+
+2. A wordcloud based upon all course titles. 
+
+```{r, message=FALSE, warning=FALSE}
+wordcloud(
+  words = unlist(strsplit(paste(course_data$Title, collapse = " "), "\\s+")), 
+  scale = c(3, 0.5), 
+  random.order = FALSE, 
+  colors = brewer.pal(8, "Set1")
+)
+```
+
+
+
