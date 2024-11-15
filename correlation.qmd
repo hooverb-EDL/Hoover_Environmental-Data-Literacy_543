@@ -5,7 +5,7 @@ author: "Rebecca Hoover"
 title-block-style: default
 title-block-banner: true
 date: "11/14/2024"
-abstract: "Write Abstract Here"
+abstract: "This assignment covers key methods for hypothesis testing, including parametric, non-parametric, and randomization approaches. It discusses using the Shapiro-Wilk test to assess normality, applying data transformations to meet normality assumptions, and using R’s cor.test() for correlation analysis in both parametric and non-parametric contexts."
 smooth-scroll: true
 code-tools: true
 toc: false
@@ -20,6 +20,7 @@ library(dplyr)
 library(GGally)
 library(lubridate)
 library(readr)
+library(gridExtra)
 
 #Load data
 url <- "https://docs.google.com/spreadsheets/d/1Mk1YGH9LqjF7drJE-td1G_JkdADOU0eMlrP01WFBT8s/pub?gid=0&single=true&output=csv"
@@ -110,19 +111,41 @@ print(shapiro_test_airtemp)
 shapiro_test_bphg <- shapiro.test(data_subset$BP_HG)
 print(shapiro_test_bphg)
 
+
 # Histogram for AirTempF
-hist(data_subset$AirTempF, main="Histogram of AirTempF", xlab="Air Temperature (F)", col="skyblue", border="white")
+hist1 <- ggplot(data_subset, aes(x = AirTempF)) +
+  geom_histogram(binwidth = 0.8, fill = "skyblue", color = "midnightblue") +
+  labs(title = "Histogram of AirTempF", x = "Air Temperature (F)", y = "Frequency") +
+  theme_minimal()
 
 # Histogram for BP_HG
-hist(data_subset$BP_HG, main="Histogram of BP_HG", xlab="Barometric Pressure (Hg)", col="lightgreen", border="white")
+hist2 <- ggplot(data_subset, aes(x = BP_HG)) +
+  geom_histogram(binwidth = 0.01, fill = "lightgreen", color = "darkgreen") +
+  labs(title = "Histogram of BP_HG", x = "Barometric Pressure (Hg)", y = "Frequency") +
+  theme_minimal()
 
 # Q-Q plot for AirTempF
-qqnorm(data_subset$AirTempF, main="Q-Q plot for AirTempF")
-qqline(data_subset$AirTempF, col = "red")
+qq1 <- ggplot(data_subset, aes(sample = AirTempF)) +
+  geom_qq() +
+  geom_qq_line(color = "red") +
+  labs(title = "Q-Q plot for AirTempF") +
+  theme_minimal()
 
 # Q-Q plot for BP_HG
-qqnorm(data_subset$BP_HG, main="Q-Q plot for BP_HG")
-qqline(data_subset$BP_HG, col = "red")
+qq2 <- ggplot(data_subset, aes(sample = BP_HG)) +
+  geom_qq() +
+  geom_qq_line(color = "red") +
+  labs(title = "Q-Q plot for BP_HG") +
+  theme_minimal()
+
+
+grid.arrange(
+  ggplotGrob(hist1), 
+  ggplotGrob(hist2), 
+  ggplotGrob(qq1), 
+  ggplotGrob(qq2), 
+  ncol = 2
+)
 
 ```
 
