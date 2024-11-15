@@ -55,38 +55,44 @@ cor_matrix <- filtered_data %>%
 cor_matrix[lower.tri(cor_matrix, diag = TRUE)] <- NA
 
 # Find the index of the maximum correlation value (excluding the lower triangle)
-strongest_pair_index <- which.max(abs(cor_matrix))
+max_corr_value <- max(abs(cor_matrix), na.rm = TRUE)
+strongest_pair_index <- which(abs(cor_matrix) == max_corr_value, arr.ind = TRUE)
 
-# Extract the variable names for the strongest correlation
-strongest_var1 <- colnames(cor_matrix)[strongest_pair_index[1]]
-strongest_var2 <- colnames(cor_matrix)[strongest_pair_index[2]]
+# Ensure that there is at least one pair found
+if (length(strongest_pair_index) > 0) {
+  # Extract the variable names for the strongest correlation
+  strongest_var1 <- colnames(cor_matrix)[strongest_pair_index[1, 1]]
+  strongest_var2 <- colnames(cor_matrix)[strongest_pair_index[1, 2]]
 
-# Get the correlation value between these two variables
-strongest_corr_value <- cor_matrix[strongest_pair_index]
+  # Get the correlation value between these two variables
+  strongest_corr_value <- cor_matrix[strongest_pair_index[1, 1], strongest_pair_index[1, 2]]
 
-# Print the pair and the correlation coefficient
-cat("Strongest correlation is between", strongest_var1, "and", strongest_var2,
-    "with a correlation of", round(strongest_corr_value, 3), "\n")
+  # Print the pair and the correlation coefficient
+  cat("Strongest correlation is between", strongest_var1, "and", strongest_var2,
+      "with a correlation of", round(strongest_corr_value, 3), "\n")
 
-# Calculate the 95% confidence interval for the correlation coefficient
-# Fisher's z transformation
-z_value <- 0.5 * log((1 + strongest_corr_value) / (1 - strongest_corr_value))
+  # Calculate the 95% confidence interval for the correlation coefficient
+  # Fisher's z transformation
+  z_value <- 0.5 * log((1 + strongest_corr_value) / (1 - strongest_corr_value))
 
-# Standard error of z
-n <- nrow(filtered_data)  # Sample size
-se_z <- 1 / sqrt(n - 3)
+  # Standard error of z
+  n <- nrow(filtered_data)  # Sample size
+  se_z <- 1 / sqrt(n - 3)
 
-# Confidence interval for z
-z_ci_lower <- z_value - 1.96 * se_z
-z_ci_upper <- z_value + 1.96 * se_z
+  # Confidence interval for z
+  z_ci_lower <- z_value - 1.96 * se_z
+  z_ci_upper <- z_value + 1.96 * se_z
 
-# Transform back from Fisher's z to get the confidence interval for the correlation coefficient
-corr_ci_lower <- (exp(2 * z_ci_lower) - 1) / (exp(2 * z_ci_lower) + 1)
-corr_ci_upper <- (exp(2 * z_ci_upper) - 1) / (exp(2 * z_ci_upper) + 1)
+  # Transform back from Fisher's z to get the confidence interval for the correlation coefficient
+  corr_ci_lower <- (exp(2 * z_ci_lower) - 1) / (exp(2 * z_ci_lower) + 1)
+  corr_ci_upper <- (exp(2 * z_ci_upper) - 1) / (exp(2 * z_ci_upper) + 1)
 
-# Print the confidence interval
-cat("The 95% confidence interval for the correlation coefficient between", strongest_var1, "and", strongest_var2,
-    "is (", round(corr_ci_lower, 3), ",", round(corr_ci_upper, 3), ")\n")
+  # Print the confidence interval
+  cat("The 95% confidence interval for the correlation coefficient between", strongest_var1, "and", strongest_var2,
+      "is (", round(corr_ci_lower, 3), ",", round(corr_ci_upper, 3), ")\n")
+} else {
+  cat("No valid correlations found.\n")
+}
 
 
 ```
