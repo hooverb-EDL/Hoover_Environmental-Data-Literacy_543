@@ -139,13 +139,11 @@ qq2 <- ggplot(data_subset, aes(sample = BP_HG)) +
   theme_minimal()
 
 
-grid.arrange(
-  ggplotGrob(hist1), 
-  ggplotGrob(hist2), 
-  ggplotGrob(qq1), 
-  ggplotGrob(qq2), 
-  ncol = 2
-)
+grid.arrange(hist1 ,
+             hist2 , 
+             qq1 , 
+             qq2 , 
+             ncol = 2)
 
 ```
 
