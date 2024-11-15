@@ -1,0 +1,157 @@
+---
+title: "RDS Assignment"
+format: html
+author: "Rebecca Hoover"
+title-block-style: default
+title-block-banner: true
+date: "11/15/2024"
+abstract: "This week, the class covered downloading and calibrating Ecotone RDS groundwater monitoring wells, noting their out-of-date in favor of Onset Hobo pressure transducers. The upcoming focus will be transforming and analyzing raw data from Meazura to visually display groundwater data from the Kimages Creek wetlands restoration project. This is what we are doing below."
+smooth-scroll: true
+code-tools: true
+toc: false
+editor_options: 
+  chunk_output_type: console
+chunk_output_type: console
+---
+
+# Load Packages and Clean Data
+
+```{r, message=FALSE, warning=FALSE}
+
+# Load required libraries
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+library(RColorBrewer)
+library(readr)
+library(lubridate)
+
+
+# Define the file paths
+w1_file_path <- "/Users/rebeccahoover/Downloads/Data Literacy/EDL-ENVS543/Hoover_Environmental-Data-Literacy_ENVS-543/000013D49BD9_20240228_1149.txt"
+
+w3_file_path <- "/Users/rebeccahoover/Downloads/Data Literacy/EDL-ENVS543/Hoover_Environmental-Data-Literacy_ENVS-543/00000A3C04D2_20240225_1231.txt"
+
+w4_file_path <- "/Users/rebeccahoover/Downloads/Data Literacy/EDL-ENVS543/Hoover_Environmental-Data-Literacy_ENVS-543/000013151FF7_20240225_1158.txt"
+
+# Function to clean up the file
+clean_file <- function(file_path) {
+  # Read the file as lines
+  lines <- read_lines(file_path)
+  
+  # Since metadata spans the first 4 lines
+  start_line <- 5  #Extracts after metadata
+  
+  # Extract only the CSV data
+  csv_data <- lines[start_line:length(lines)]
+  
+  # Join the lines back into a single string with newline characters
+  csv_text <- paste(csv_data, collapse = "\n")
+  
+  # Write the cleaned CSV data to a new file
+  cleaned_file_path <- paste0(sub(".txt$", "", file_path), "_cleaned.csv")
+  write_lines(csv_text, cleaned_file_path)
+  
+  return(cleaned_file_path)
+}
+
+# Clean each file
+cleaned_well_1 <- clean_file(w1_file_path)
+cleaned_well_3 <- clean_file(w3_file_path)
+cleaned_well_4 <- clean_file(w4_file_path)
+
+```
+
+# Wrangle Data
+
+```{r, message=FALSE, warning=FALSE}
+
+# Read in
+well_1_data <- read_csv(cleaned_well_1)
+well_3_data <- read_csv(cleaned_well_3)
+well_4_data <- read_csv(cleaned_well_4)
+
+#Rename Columns
+well_1_data <- well_1_data %>%
+  rename(Date = `____Date___`, Level = `_Level_`)
+
+well_3_data <- well_3_data %>%
+  rename(Date = `____Date___`, Level = `_Level_`)
+
+well_4_data <- well_4_data %>%
+  rename(Date = `____Date___`, Level = `_Level_`)
+
+# Convert Date 
+well_1_data <- well_1_data %>%
+  mutate(Date = mdy(Date), Level = as.numeric(Level))
+
+well_3_data <- well_3_data %>%
+  mutate(Date = mdy(Date), Level = as.numeric(Level))
+
+well_4_data <- well_4_data %>%
+  mutate(Date = mdy(Date), Level = as.numeric(Level))
+
+# Add a "Well" column 
+well_1_data$Well <- "Well 1"
+well_3_data$Well <- "Well 3"
+well_4_data$Well <- "Well 4"
+
+# Add 6 inches to the ( Well 1 ) Level (Depth) column
+well_1_data <- well_1_data %>%
+  mutate(Level = Level + 6)
+
+# Combine the three well datasets into one
+combined_data <- bind_rows(well_1_data, well_3_data, well_4_data)
+
+#Filter for Year
+combined_data_2023 <- combined_data %>%
+  filter(year(Date) == 2023)
+
+filtered_data <- combined_data_2023 %>%
+  filter(Date >= as.Date("2023-03-28") & Date <= as.Date("2023-11-06"))
+
+```
+
+# Graphics
+
+```{r}
+# Create a line plot 
+ggplot(filtered_data, aes(x = Date, 
+                          y = Level, 
+                          color = Well, 
+                          group = Well)) +
+  geom_line() + 
+  labs(title = "Depth of Ground Water Table for Wells: W-1, W-3 and W-4.\nDuring the 2023 Growing Season: March 28th - November 8th",
+       x = "Date",
+       y = "Depth to Groundwater Table (inches)", 
+       color = NULL) +  
+  theme_minimal() +
+  theme(legend.position = "top",
+        plot.title = element_text(hjust = 0.5, family = "Times New Roman"),  
+        legend.title = element_blank(),
+        axis.text.x = element_text(angle = 45, hjust = 1, family = "Times New Roman"),
+        axis.text.y = element_text(family = "Times New Roman"),
+        axis.title.x = element_text(family = "Times New Roman"),
+        axis.title.y = element_text(family = "Times New Roman"),
+        legend.text = element_text(family = "Times New Roman")) +    
+  scale_color_brewer(palette = "Set2") +     #color blind friendly
+  geom_hline(yintercept = 0, linetype = "dotted", color = "black")+
+  geom_hline(yintercept = -12, color = "black")+
+  geom_vline(xintercept = as.Date("2023-03-28"), color = "black") +
+  geom_text(aes(x = as.Date("2023-03-28"), y = min(Level) - 5,
+                label = "Start of Growing Season (2023-03-28)"), 
+            angle = 90, vjust = - 1, hjust = -0.19, color = "black", family = "Times New Roman") + 
+  scale_x_date(breaks = "1 month",  
+               labels = scales::date_format("%b %d, %Y"))
+
+
+
+```
+
+# Discussion
+
+To meet the ACOE hydrology success criteria, the water levels at these sites must remain at or above 1 foot from the soil surface for at least 12.5% of the growing season. From the beginning of the growing season through mid-May, all three wells consistently meet this criterion. However, upon reviewing the raw data, a decline in water levels to 1 foot below surface level is observed starting on May 23, 2023, for Well 1.
+
+The growing season spans 225 consecutive days, with 56 days occurring between the start of the season and May 23rd. For this 56-day period, Well 1 maintains water levels above 1 foot from the surface, meeting the 12.5% criterion for that portion of the season. Given that the total growing season lasts 225 days, Well 1 meets the ACOE hydrology success criterion for at least 12.5% of the growing season up to May 23, 2023.
+
+Therefore, all three wells satisfy the hydrology requirements set forth by the ACOE.
