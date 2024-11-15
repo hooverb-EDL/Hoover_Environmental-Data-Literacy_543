@@ -103,15 +103,6 @@ if (length(strongest_pair_index) > 0) {
 ```{r}
 data_subset <- rice[1:40, ]
 
-# Shapiro-Wilk test for normality on AirTempF
-shapiro_test_airtemp <- shapiro.test(data_subset$AirTempF)
-print(shapiro_test_airtemp)
-
-# Shapiro-Wilk test for normality on BP_HG
-shapiro_test_bphg <- shapiro.test(data_subset$BP_HG)
-print(shapiro_test_bphg)
-
-
 # Histogram for AirTempF
 hist1 <- ggplot(data_subset, aes(x = AirTempF)) +
   geom_histogram(binwidth = 0.8, fill = "skyblue", color = "midnightblue") +
@@ -150,6 +141,14 @@ grid.arrange(hist1 ,
 4. Given your findings in the last question, what kind of correlation statistic would be most appropriate for estimating the correlation between this subset of data?
 
 ```{r}
+# Shapiro-Wilk test for normality on AirTempF
+shapiro_test_airtemp <- shapiro.test(data_subset$AirTempF)
+print(shapiro_test_airtemp)
+
+# Shapiro-Wilk test for normality on BP_HG
+shapiro_test_bphg <- shapiro.test(data_subset$BP_HG)
+print(shapiro_test_bphg)
+
 # Calculate Spearman's rank correlation between AirTempF and BP_HG
 spearman_correlation <- cor(data_subset$AirTempF, data_subset$BP_HG, method = "spearman")
 
