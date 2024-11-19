@@ -90,11 +90,6 @@ predictors <- c("dewp", "humid", "temp")
 for (predictor in predictors) {
   model <- lm(`Departure Delay` ~ get(predictor), data = df_clean)
   
-  # Summarize and plot residuals
-  cat("\nSummary for model with", predictor, ":\n")
-  summary(model)
-  plot_residuals(model)
-  
   # Compare the AIC of the model
   cat("AIC for model with", predictor, ":", AIC(model), "\n")
   
