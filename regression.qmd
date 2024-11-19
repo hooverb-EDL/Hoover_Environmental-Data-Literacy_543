@@ -1,0 +1,125 @@
+---
+title: "Regression Analysis Homework"
+author: "Rebecca Hoover"
+title-block-banner: true
+date: "11/19/2024"
+abstract: "This topic covers the process of performing linear regression analysis, including understanding least squares regression, using the lm() function for modeling, and evaluating model performance through residuals and fitted values. It also highlights model selection techniques, such as using the AIC (Akaike Information Criterion), to choose the best model from a set of potential candidates. The focus is on both the conceptual understanding and practical implementation of linear regression analysis."
+smooth-scroll: true
+format: html
+editor: visual
+editor_options: 
+  chunk_output_type: console
+---
+
+## Preliminary Code
+
+```{r, message=FALSE, warning=FALSE}
+library( tidyverse )
+library( nycflights13 )
+library(GGally)
+library(ggcorrplot)
+library(corrplot)
+library(dplyr)
+
+#summary( flights) 
+#summary( weather )
+
+flights %>%
+  filter( origin == "JFK", carrier == "EV") %>%
+  mutate( DateTime = paste(month,day,hour, sep=".")) %>%
+  select( DateTime, 
+          `Departure Delay` = dep_delay,
+          `Departure Time` = sched_dep_time) %>%
+  droplevels() -> df.jfk 
+
+
+weather %>%
+  filter( origin == "JFK") %>% 
+  mutate( DateTime = paste(month,day,hour, sep=".")) %>%
+  select( -origin, -year, -month, -day, -hour, -time_hour ) -> df.weather 
+
+merge( df.jfk, df.weather, by="DateTime" ) %>%
+  select( -DateTime ) -> df 
+```
+
+## Activity
+
+What features of this data set may impact the departure delay for flights coming out of JFK on ExpressJet Airlines?
+
+The top three features that affect departure delay are dewpoint, humidity, and temperature. These features were selected because they resulted in the lowest Akaike Information Criterion (AIC) values in the AIC table, which indicates that they provide the best trade-off between model fit and complexity. In other words, these features explain the most variance in departure delay while minimizing overfitting, making them the most important predictors based on the AIC criterion.
+
+```{r}
+# Function to plot residuals for a model
+plot_residuals <- function(model) {
+  par(mfrow = c(2, 2))
+  plot(model)
+  par(mfrow = c(1, 1))
+}
+
+# Check for missing values and remove rows with missing data
+df_clean <- df %>% drop_na()
+
+# Initial regression with multiple predictors
+model1 <- lm(`Departure Delay` ~ 
+               temp + 
+               dewp + 
+               humid + 
+               wind_dir + 
+               wind_speed + 
+               wind_gust + 
+               precip + 
+               pressure + 
+               visib + 
+               `Departure Time`, data = df_clean)
+
+# Summarize and plot residuals for model1
+summary(model1)
+plot_residuals(model1)
+
+# Compare the AIC of the initial model
+cat("AIC for model1:", AIC(model1), "\n")
+
+# Perform stepwise selection based on AIC for model1
+step_model1 <- step(model1, direction = "both")
+summary(step_model1)
+
+# List of models to compare (TOP AIC Values : temperature, dewpoint, humidity)
+predictors <- c("dewp", "humid", "temp")
+
+# Loop over predictors to build, summarize, and evaluate individual models
+for (predictor in predictors) {
+  model <- lm(`Departure Delay` ~ get(predictor), data = df_clean)
+  
+  # Summarize and plot residuals
+  cat("\nSummary for model with", predictor, ":\n")
+  summary(model)
+  plot_residuals(model)
+  
+  # Compare the AIC of the model
+  cat("AIC for model with", predictor, ":", AIC(model), "\n")
+  
+  # Perform stepwise selection for the individual model
+  step_model <- step(model, direction = "both")
+  summary(step_model)
+}
+
+```
+
+## Graphics
+
+```{r}
+
+df_subset <- df_clean %>% select(dewp, temp, humid)
+ggpairs(df_subset) + 
+  ggtitle("Pairwise Plot of Dewpoint, Temperature, and Humidity") +
+  theme(
+    plot.title = element_text(hjust = 0.5, family = "Times New Roman", size = 16) 
+  )
+
+```
+
+
+
+
+
+
