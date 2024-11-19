@@ -16,12 +16,12 @@ editor_options:
 ```{r, message=FALSE, warning=FALSE}
 library( tidyverse )
 library( nycflights13 )
-library(GGally)
-library(ggcorrplot)
-library(corrplot)
-library(dplyr)
+library( GGally )
+library( ggcorrplot )
+library( corrplot )
+library( dplyr )
 
-#summary( flights) 
+#summary( flights ) 
 #summary( weather )
 
 flights %>%
@@ -50,17 +50,17 @@ The top three features that affect departure delay are dewpoint, humidity, and t
 
 ```{r}
 # Function to plot residuals for a model
-plot_residuals <- function(model) {
-  par(mfrow = c(2, 2))
-  plot(model)
-  par(mfrow = c(1, 1))
+plot_residuals <- function( model ) {
+  par( mfrow = c( 2, 2 ) )
+  plot( model )
+  par( mfrow = c( 1, 1 ) )
 }
 
 # Check for missing values and remove rows with missing data
 df_clean <- df %>% drop_na()
 
 # Initial regression with multiple predictors
-model1 <- lm(`Departure Delay` ~ 
+model1 <- lm( `Departure Delay` ~ 
                temp + 
                dewp + 
                humid + 
@@ -70,32 +70,32 @@ model1 <- lm(`Departure Delay` ~
                precip + 
                pressure + 
                visib + 
-               `Departure Time`, data = df_clean)
+               `Departure Time`, data = df_clean )
 
 # Summarize and plot residuals for model1
-summary(model1)
-plot_residuals(model1)
+summary( model1 )
+plot_residuals( model1 )
 
 # Compare the AIC of the initial model
-cat("AIC for model1:", AIC(model1), "\n")
+cat( "AIC for model1:", AIC(model1), "\n" )
 
 # Perform stepwise selection based on AIC for model1
-step_model1 <- step(model1, direction = "both")
-summary(step_model1)
+step_model1 <- step( model1, direction = "both" )
+summary( step_model1 )
 
 # List of models to compare (TOP AIC Values : temperature, dewpoint, humidity)
-predictors <- c("dewp", "humid", "temp")
+predictors <- c( "dewp", "humid", "temp" )
 
 # Loop over predictors to build, summarize, and evaluate individual models
-for (predictor in predictors) {
-  model <- lm(`Departure Delay` ~ get(predictor), data = df_clean)
+for ( predictor in predictors ) {
+  model <- lm( `Departure Delay` ~ get( predictor ), data = df_clean )
   
   # Compare the AIC of the model
-  cat("AIC for model with", predictor, ":", AIC(model), "\n")
+  cat( "AIC for model with", predictor, ":", AIC( model ), "\n" )
   
   # Perform stepwise selection for the individual model
-  step_model <- step(model, direction = "both")
-  summary(step_model)
+  step_model <- step( model, direction = "both" )
+  summary( step_model )
 }
 
 ```
@@ -104,11 +104,11 @@ for (predictor in predictors) {
 
 ```{r}
 
-df_subset <- df_clean %>% select(dewp, temp, humid)
-ggpairs(df_subset) + 
-  ggtitle("Pairwise Plot of Dewpoint, Temperature, and Humidity") +
+df_subset <- df_clean %>% select( dewp, temp, humid )
+ggpairs( df_subset ) + 
+  ggtitle( "Pairwise Plot of Dewpoint, Temperature, and Humidity" ) +
   theme(
-    plot.title = element_text(hjust = 0.5, family = "Times New Roman", size = 16) 
+    plot.title = element_text( hjust = 0.5, family = "Times New Roman", size = 16 ) 
   )
 
 ```
