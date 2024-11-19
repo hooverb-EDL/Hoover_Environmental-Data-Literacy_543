@@ -46,7 +46,7 @@ merge( df.jfk, df.weather, by="DateTime" ) %>%
 
 What features of this data set may impact the departure delay for flights coming out of JFK on ExpressJet Airlines?
 
-The top three features that affect departure delay are dewpoint, humidity, and temperature. These features were selected because they resulted in the lowest Akaike Information Criterion (AIC) values in the AIC table, which indicates that they provide the best trade-off between model fit and complexity. In other words, these features explain the most variance in departure delay while minimizing overfitting, making them the most important predictors based on the AIC criterion.
+**The top three features that affect departure delay are dewpoint, humidity, and temperature. These features were selected because they resulted in the lowest Akaike Information Criterion (AIC) values in the AIC table, which indicates that they provide the best trade-off between model fit and complexity. In other words, these features explain the most variance in departure delay while minimizing overfitting, making them the most important predictors based on the AIC criterion.**
 
 ```{r}
 # Function to plot residuals for a model
