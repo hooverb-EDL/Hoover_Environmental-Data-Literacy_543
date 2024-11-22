@@ -4,7 +4,7 @@ subtitle: "In Class Activity"
 author: "Rebecca Hoover"
 title-block-banner: true
 date: "11/21/2024"
-abstract: "Write Abstract Here"
+abstract: "This study focuses on statistical methods for mean analysis and hypothesis testing. It covers rejection regions, the Student's t-test for sample comparison, ANOVA for assessing multiple means, and Tukey's test for identifying specific differences among those means."
 smooth-scroll: true
 format: html
 editor: visual
@@ -12,7 +12,7 @@ editor_options:
   chunk_output_type: console
 ---
 
-Here is some new data to play with a bit to explore one-way and two-way analysis of variance models.  These data represent weight data associated with three different diet types.  There are 76 observations of individuals with the following characteristics:
+Metadata:
 
 - Gender (0/1)
 - Age (earth years. 🤓)
@@ -20,7 +20,7 @@ Here is some new data to play with a bit to explore one-way and two-way analysis
 - Pre.weight & weight6weeks (kg)
 - Diet (1,2,3)
 
-The data are located as a CSV file named `DietData.csv` linked from the Canvas page.  Load the data in and format things so they look correctly to you.
+## Load in Packages and Tidy Data
 
 ```{r, message=FALSE, warning=FALSE}
 # load the data in here
@@ -55,7 +55,7 @@ print(summary(data))
 
 One of the first things to do is to look at the data and see if there are any obvious things.  Go ahead and explore these data visually.  What do you see?
 
-We have two categorical columns, gender and diet, the rest being of numeric value. We can see if our categorical data is comparable and our numeric data is normally distributed.
+We have two categorical columns, gender and diet, the rest being of numeric value. We can see if Diet Analysis Goals in weight loss are normally distributed, it is,our categorical data is comparable and our numeric data is normally distributed. We can move forward.
 
 ```{r}
 # Data visualization
@@ -91,7 +91,7 @@ grid.arrange(h1, h2, h3, nrow=2)
 
 ## Estimating Mean Values
 
-Make a table of Weight Loss by gender and diet.
+Table of Weight Loss by Gender and Diet.
 
 ```{r, warning=FALSE, message=FALSE}
 # Table output
@@ -131,6 +131,8 @@ summary(fit_diet)
 
 Are they all significantly different?  Try the `TukeyHSD()` Interpret the results.
 
+*In comparing the diets, we found that there is no significant difference in weight loss between Diet 1 and Diet 2 (p = 0.9988), indicating that the slight difference observed is not meaningful. However, when comparing Diet 3 to Diet 1, there is a significant difference in weight loss (p = 0.0188), with Diet 3 resulting in more weight loss than Diet 1. Similarly, Diet 3 also shows a significant difference in weight loss compared to Diet 2 (p = 0.0152), again showing that Diet 3 leads to greater weight loss. Overall, the Tukey post-hoc test indicates that Diet 3 results in significantly more weight loss than both Diet 1 and Diet 2, while there is no significant difference between Diet 1 and Diet 2.*
+
 ```{r}
 # Posthoc test
 gobble <- TukeyHSD(fit_diet)
@@ -141,12 +143,27 @@ print(gobble)
  
 ```{r}
 # How much variance?
+# R-squared for Diet
+diet_anova <- tidy(fit_diet)
+ss_total <- sum(diet_anova$sumsq)
+r2_diet <- diet_anova$sumsq[1] / ss_total
+print(paste("R-squared for Diet:", r2_diet))
 ```
 
 Since I asked the question, the answer is probably no.  Why does it not do this?  Probably for historical reasons, which are a bit of a pain in the backside.  That being said, there are some `tidy` ways to fix this issue.  I'm going to use the `broom` package which allows us to clean up (or tidy if you will) the model objects.  This will take the model object and pull out *all* the ANOVA table stuff and put it into a `tibble`.
 
-```{r}
- 
+```{r,warning=FALSE}
+# use your model fit next (I called mine fit.diet)
+tidy_diet <- tidy( r2_diet )
+tidy_diet
+```
+
+Now, since it is all easily accessible, we can calculate the $R^2$ from the new model output.
+
+```{r, warning=FALSE}
+# Estimate the variance explained from the raw sums of squares
+r2_Diet <- tidy_diet$sumsq[1] / sum( tidy_diet$sumsq )
+r2_Diet 
 ```
 
 
@@ -181,6 +198,7 @@ r2_gender
 
 **How do you interpret these results thus far?**
 
+The p-value of 0.835 indicates that there is no significant difference in weight loss between genders. Additionally, the R-squared value of 0.0005 suggests that gender accounts for only a very small portion (0.05%) of the variation in weight loss, which is essentially negligible.
 
 # Do genders respond differently to diets?
 
@@ -190,8 +208,11 @@ $y_{ijk} = \mu + \tau_{Diet,i} + \tau_{gender,j} + \epsilon_k$
 So here we do something a bit different.  We want to simultaneously ask the following questions:
 
 - Do diets influence weight loss?
+**The diet has a significant effect on weight loss, as the p-value is less than 0.05.** 
 - Do genders influence weight loss?
+**Gender does not have a significant effect on weight loss, as the p-value is greater than 0.05.**
 - Is there an interaction where different genders respond differently to different diets?
+**The interaction between diet and gender is statistically significant, as the p-value is less than 0.05.**
 
 In $R$, this is done as:
 
@@ -235,4 +256,4 @@ r2_interaction
 
 How would you compare the models you generated?  How do you interpret the findings?
 
-*Explain, in words, your findings and interpretation of these findings*
+*The two-way ANOVA reveals significant effects of diet (p < 0.01) and a diet-gender interaction (p = 0.048), indicating that the effect of diet on weight loss is influenced by gender. The interaction model explains a larger portion of the variance in weight loss compared to diet or gender alone. Specifically, diet has a significant impact on weight loss, with Diet 1 being the most effective. Although gender alone does not significantly affect weight loss, the notable interaction between diet and gender suggests that gender moderates the effect of diet. Overall, the interaction model provides the most comprehensive explanation for the variance in weight loss.*
