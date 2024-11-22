@@ -1,0 +1,238 @@
+---
+title: "Analysis of Variance"
+subtitle: "In Class Activity"
+author: "Rebecca Hoover"
+title-block-banner: true
+date: "11/21/2024"
+abstract: "Write Abstract Here"
+smooth-scroll: true
+format: html
+editor: visual
+editor_options: 
+  chunk_output_type: console
+---
+
+Here is some new data to play with a bit to explore one-way and two-way analysis of variance models.  These data represent weight data associated with three different diet types.  There are 76 observations of individuals with the following characteristics:
+
+- Gender (0/1)
+- Age (earth years. 🤓)
+- Height (cm)
+- Pre.weight & weight6weeks (kg)
+- Diet (1,2,3)
+
+The data are located as a CSV file named `DietData.csv` linked from the Canvas page.  Load the data in and format things so they look correctly to you.
+
+```{r, message=FALSE, warning=FALSE}
+# load the data in here
+#Packages
+library(tidyverse)
+library(dplyr)
+library(tidyr)
+library(broom)
+library(ggplot2)
+library(gridExtra)
+#Load data
+data <- read.csv("DietData.csv")
+
+data <- data %>%
+  mutate(Person_ID = Person,  
+         Gender = gender,
+         Pre_Weight = pre.weight,
+         Weight_6wks = weight6weeks) %>%  
+  mutate(Weight_Loss = Pre_Weight - Weight_6wks) %>%
+  select(-Person, -gender, -pre.weight, -weight6weeks) %>%
+  select(Person_ID, Gender, Age, Height, Diet, Pre_Weight, Weight_6wks, Weight_Loss)
+
+data$Gender <- factor(data$Gender, levels = c(0, 1), labels = c("Female", "Male"))
+
+data$Diet <- factor(data$Diet, levels = c(1, 2, 3), labels = c("Diet 1", "Diet 2", "Diet 3"))
+
+
+print(summary(data))
+```
+
+## Exploratory Data Anlsysis
+
+One of the first things to do is to look at the data and see if there are any obvious things.  Go ahead and explore these data visually.  What do you see?
+
+We have two categorical columns, gender and diet, the rest being of numeric value. We can see if our categorical data is comparable and our numeric data is normally distributed.
+
+```{r}
+# Data visualization
+h1 <- ggplot(data, aes(x = Gender, y = Weight_Loss, fill = Gender)) +
+  geom_boxplot() + 
+  labs(title = "Weight Loss by Gender",
+       x = "Gender",
+       y = "Weight Loss") +
+  scale_fill_manual(values = c("Male" = "cornflowerblue", "Female" = "pink")) +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+h2 <- ggplot(data, aes(x = Diet, y = Weight_Loss, fill = Diet)) +
+  geom_boxplot() +  
+  labs(title = "Weight Loss by Diet",
+       x = "Diet",
+       y = "Weight Loss") +
+  scale_fill_brewer(palette = "Set3") +  
+  theme_minimal()+
+  theme(legend.position = "none")
+
+h3 <- ggplot(data, aes(x = Weight_Loss)) +
+  geom_histogram(binwidth = 0.5, color = "blue", fill = "skyblue") + 
+  labs(title = "Normal Distribution of Weight Loss",
+       x = "Weight Loss (kg)",
+       y = "Frequency") +
+  theme_minimal()
+
+grid.arrange(h1, h2, h3, nrow=2)
+```
+
+
+
+## Estimating Mean Values
+
+Make a table of Weight Loss by gender and diet.
+
+```{r, warning=FALSE, message=FALSE}
+# Table output
+diet_table <- data %>%
+  group_by(Gender, Diet) %>%
+  summarize(
+    Mean_Weight_Loss = mean(Weight_Loss),  
+    Median_Weight_Loss = median(Weight_Loss), 
+    SD_Weight_Loss = sd(Weight_Loss),         
+    Count = n()                               
+  )
+
+print(diet_table)
+```
+
+
+## 1-Way Analysis of Variance
+
+*Diet Issues:* 
+
+
+The underlying linear model.
+
+
+$$
+y_{ij} = \mu + \tau_{Diet, i} + \epsilon_j
+$$
+
+
+Test the null hypothesis, $H_O:$ *There is no effect of diet on weight loss* (e.g., $\tau_{Diet-1} = \tau_{Diet-2} = \tau_{Diet-3} = 0.0$).  Is there evidence for one diet producing more weight loss than the others?  Create an `aov` analysis and assign it to the variable `fit.diet` and examine its contents.
+
+```{r}
+# Define model
+fit_diet <- aov(Weight_Loss ~ as.factor(Diet), data = data)
+summary(fit_diet)
+```
+
+Are they all significantly different?  Try the `TukeyHSD()` Interpret the results.
+
+```{r}
+# Posthoc test
+gobble <- TukeyHSD(fit_diet)
+print(gobble)
+```
+
+ How much of the variation is explained?  If you notice when you do a summary from a `lm()` (regression) model, it gives you the $R^2$ values directly (remember $R^2 = \frac{SS_{model}}{SS_{Error}}$).  Does `summary()` of your `aov` model give you that?
+ 
+```{r}
+# How much variance?
+```
+
+Since I asked the question, the answer is probably no.  Why does it not do this?  Probably for historical reasons, which are a bit of a pain in the backside.  That being said, there are some `tidy` ways to fix this issue.  I'm going to use the `broom` package which allows us to clean up (or tidy if you will) the model objects.  This will take the model object and pull out *all* the ANOVA table stuff and put it into a `tibble`.
+
+```{r}
+ 
+```
+
+
+ 
+
+*Gender:* 
+
+The underlying linear model.
+
+
+$y_{ij} = \mu + \tau_{gender, i} + \epsilon_j$
+
+
+
+Independent of the diet, test the null hypothesis $H_O:$ *There is no difference in weight loss between genders* (e.g., $\tau_{gender-0} = \tau_{gender-2} = 0.0 $).  Is there evidence for one gender being significantly different than another?  How much of the variation is explained (another $R^2$ by gender)?
+
+```{r}
+# partition effects
+# Define the model: ANOVA for weight loss by gender
+fit_gender <- aov(Weight_Loss ~ as.factor(Gender), data = data)
+
+# View the summary of the ANOVA model
+summary(fit_gender)
+
+# Tidy the model output for gender
+tidy_gender <- tidy(fit_gender)
+
+# Estimate R² for gender model from raw sums of squares
+r2_gender <- tidy_gender$sumsq[1] / sum(tidy_gender$sumsq)
+r2_gender
+```
+
+**How do you interpret these results thus far?**
+
+
+# Do genders respond differently to diets?
+
+
+$y_{ijk} = \mu + \tau_{Diet,i} + \tau_{gender,j} + \epsilon_k$
+
+So here we do something a bit different.  We want to simultaneously ask the following questions:
+
+- Do diets influence weight loss?
+- Do genders influence weight loss?
+- Is there an interaction where different genders respond differently to different diets?
+
+In $R$, this is done as:
+
+```{r}
+# diet model and gender model
+# Two-way ANOVA model: Diet and Gender interaction
+fit_interaction <- aov(Weight_Loss ~ as.factor(Diet) * as.factor(Gender), data = data)
+
+# View the summary of the interaction model
+summary(fit_interaction)
+
+# Visualize the interaction between diet and gender
+ggplot(data, aes(x = Diet, y = Weight_Loss, fill = Gender)) +
+  geom_boxplot() +
+  labs(title = "Interaction between Diet and Gender on Weight Loss",
+       x = "Diet",
+       y = "Weight Loss (kg)") +
+  theme_minimal() +
+  scale_fill_manual(values = c("pink", "cornflowerblue"))
+```
+
+
+```{r}
+# interaction model
+# Tidy the model output for interaction
+tidy_interaction <- tidy(fit_interaction)
+
+```
+
+What is the $R^2$ for this model?
+
+```{r}
+# best model variance explained
+# Estimate R² for the interaction model from raw sums of squares
+r2_interaction <- tidy_interaction$sumsq[1] / sum(tidy_interaction$sumsq)
+r2_interaction
+```
+
+
+# Which Model is Best?
+
+How would you compare the models you generated?  How do you interpret the findings?
+
+*Explain, in words, your findings and interpretation of these findings*

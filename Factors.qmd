@@ -88,6 +88,7 @@ rice <- rice %>% select(DateTime,
 ```
 
 ## Step 3 : Factors Homework
+
 ```{r}
 #Change the order of the weekdays to start with Monday and Add column for Weekday
 
@@ -178,9 +179,3 @@ summary_table |>
   kable( caption = "Most Common Lunar Phase and Tide to Each Weekday" ) |>
   kable_material_dark()
 ```
-
-
-
-
-
-
