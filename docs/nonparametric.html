@@ -130,9 +130,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="questions" class="level2">
 <h2 class="anchored" data-anchor-id="questions">Questions</h2>
 <p>For each of the following questions, please provide your analysis and an interpretation (e.g., written as you would in a scientific publication). If it helps to describe your result, add tables or figures to help make your case. For every case, explain why you chose the particular analysis you did and demonstrate the reasons from the data.</p>
-<ol type="1">
-<li>The FDA has suggested a change in a medication that has been shown to have detrimental side effects in half of the patients. A clinical trial was conducted with nineteen patients; only three reported side effects. Did the change make a significant difference?</li>
-</ol>
+<section id="question-1." class="level3">
+<h3 class="anchored" data-anchor-id="question-1.">Question 1.</h3>
+<p>The FDA has suggested a change in a medication that has been shown to have detrimental side effects in half of the patients. A clinical trial was conducted with nineteen patients; only three reported side effects. Did the change make a significant difference?</p>
 <p><em>Null Hypothesis (H₀)</em>: The proportion of patients who experience side effects after the change is the same as it was before the change (which we assume is 50%, or 0.5, based on the information that half of the patients experienced side effects before).</p>
 <p>H0: p = 0.5</p>
 <p><em>Alternative Hypothesis (H₁)</em>: The proportion of patients who experience side effects after the change is different from 0.5.</p>
@@ -173,9 +173,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p><strong>This statement verifies that the alteration in the medication resulted in a statistically significant effect on the observed outcomes. The analysis indicated a p-value that is lower than 0.05, suggesting that the likelihood of the observed results occurring by chance is extremely low. This strong statistical evidence supports the conclusion that the change in medication had a meaningful impact on the study’s findings.</strong></p>
 <hr>
-<ol start="2" type="1">
-<li>Two different environmental remediation treatments are evaluated for the impacts on turbidity (measured using the Nephelometric Turbidity Unit or NTU). For regulatory reasons, turbidity is binned into four groups based on NTU: 0-15 ntu, 16-22 ntu, 23-30 ntu, and 31+ ntu. Do both treatments have the same impact on turbidity? Explain.</li>
-</ol>
+</section>
+<section id="question-2." class="level3">
+<h3 class="anchored" data-anchor-id="question-2.">Question 2.</h3>
+<p>Two different environmental remediation treatments are evaluated for the impacts on turbidity (measured using the Nephelometric Turbidity Unit or NTU). For regulatory reasons, turbidity is binned into four groups based on NTU: 0-15 ntu, 16-22 ntu, 23-30 ntu, and 31+ ntu. Do both treatments have the same impact on turbidity? Explain.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load packages</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
@@ -251,9 +252,10 @@ X-squared = 17.286, df = 3, p-value = 0.0006172</code></pre>
 </div>
 </div>
 <hr>
-<ol start="3" type="1">
-<li>A dozen graduate students tried to determine if there was a relationship between their undergraduate GPA and their scores on the Graduate Records Examination. Look at these data and determine the extent to which they are related. Explain.</li>
-</ol>
+</section>
+<section id="question-3." class="level3">
+<h3 class="anchored" data-anchor-id="question-3.">Question 3.</h3>
+<p>A dozen graduate students tried to determine if there was a relationship between their undergraduate GPA and their scores on the Graduate Records Examination. Look at these data and determine the extent to which they are related. Explain.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1: Read the CSV data</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"grad_school.csv"</span>)</span>
@@ -302,9 +304,10 @@ F-statistic: 7.974 on 1 and 10 DF,  p-value: 0.01804</code></pre>
 </div>
 </div>
 <hr>
-<ol start="4" type="1">
-<li>You are looking at fruit yield on dogwood. You designed an experiment with four different treatments and measured the total yield in germinated seeds. Are there differences in yield? Explain.</li>
-</ol>
+</section>
+<section id="question-4." class="level3">
+<h3 class="anchored" data-anchor-id="question-4.">Question 4.</h3>
+<p>You are looking at fruit yield on dogwood. You designed an experiment with four different treatments and measured the total yield in germinated seeds. Are there differences in yield? Explain.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the data</span></span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"DogwoodSeeds.csv"</span>)</span>
@@ -360,6 +363,7 @@ D-C -15.839286 -20.541387 -11.13718461 0.0000000</code></pre>
 </div>
 </div>
 </div>
+</section>
 </section>
 
 </main>
