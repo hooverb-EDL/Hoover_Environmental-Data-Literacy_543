@@ -1,0 +1,182 @@
+---
+title: "Non Parametric and Counting Statistics"
+author: "Rebecca Hoover"
+title-block-banner: true
+date: "10/15/2024"
+abstract: "Counting and Non-Parametric Statistics are essential when you either have categorical data for both predictors and response variables OR your data that you wanted to use a parametric approach (correlation, regression, ANOVA) is not well-behaved and will continue to conform to the assumptions of those models (e.g., normality, homoscedasticity, etc.)."
+smooth-scroll: true
+format: html
+editor: visual
+editor_options: 
+  chunk_output_type: console
+---
+
+## Student Learning Objectives
+
+At the end of this topic, you should be able to: 
+
+-   Identify specific non-parametric approaches that could be used based on the kind of data being presented. 
+
+-   Perform appropriate non-parametric analyses given the raw data.
+
+-   Communicate the results of non-parametric analyses. 
+
+
+
+## Questions
+
+For each of the following questions, please provide your analysis and an interpretation (e.g., written as you would in a scientific publication). If it helps to describe your result, add tables or figures to help make your case. For every case, explain why you chose the particular analysis you did and demonstrate the reasons from the data.
+
+1.  The FDA has suggested a change in a medication that has been shown to have detrimental side effects in half of the patients. A clinical trial was conducted with nineteen patients; only three reported side effects. Did the change make a significant difference? 
+
+
+*Null Hypothesis (H₀)*: The proportion of patients who experience side effects after the change is the same as it was before the change (which we assume is 50%, or 0.5, based on the information that half of the patients experienced side effects before).
+
+H0: p = 0.5
+
+*Alternative Hypothesis (H₁)*: The proportion of patients who experience side effects after the change is different from 0.5.
+
+H1: p ≠ 0.5
+
+
+```{r}
+# Define the observed values
+n <- 19  
+x <- 3   
+p0 <- 0.5  
+
+# Calculate the observed proportion
+p_hat <- x / n
+
+# Calculate the Z-test statistic
+Z <- (p_hat - p0) / sqrt(p0 * (1 - p0) / n)
+
+# Calculate the p-value for a two-tailed test
+p_value <- 2 * (1 - pnorm(abs(Z)))
+
+# Output the results
+cat("Z-test statistic:", Z, "\n")
+cat("P-value:", p_value, "\n")
+
+# Check if the result is significant at alpha = 0.05
+if (p_value < 0.05) {
+  cat("The result is statistically significant. Reject the null hypothesis.\n")
+} else {
+  cat("The result is not statistically significant. Fail to reject the null hypothesis.\n")
+}
+
+```
+
+**This statement verifies that the alteration in the medication resulted in a statistically significant effect on the observed outcomes. The analysis indicated a p-value that is lower than  0.05, suggesting that the likelihood of the observed results occurring by chance is extremely low. This strong statistical evidence supports the conclusion that the change in medication had a meaningful impact on the study's findings.**
+
+----------------------------------------------------------------------------------------------
+
+2.  Two different environmental remediation treatments are evaluated for the impacts on turbidity (measured using the Nephelometric Turbidity Unit or NTU). For regulatory reasons, turbidity is binned into four groups based on NTU: 0-15 ntu, 16-22 ntu, 23-30 ntu, and 31+ ntu. Do both treatments have the same impact on turbidity? Explain.
+
+```{r, message=FALSE, warning=FALSE}
+# Load packages
+library(dplyr)
+
+# Load the data from CSV
+ntu_data <- read.csv("ntu_data.csv")
+
+# View the first few rows of the dataset
+head(ntu_data)
+
+# Check the structure of the data
+str(ntu_data)
+
+# Create a new factor variable for turbidity bins
+ntu_data$Turbidity_Binned <- cut(ntu_data$NTU,
+                                  breaks = c(0, 15, 22, 30, Inf),
+                                  labels = c("0-15", "16-22", "23-30", "31+"),
+                                  right = TRUE)
+
+# Create a contingency table
+contingency_table <- table(ntu_data$Treatment, ntu_data$Turbidity_Binned)
+
+# View the contingency table
+print(contingency_table)
+
+# Perform the Chi-Square test
+chi_square_result <- chisq.test(contingency_table)
+
+# View the results of the Chi-Square test
+chi_square_result
+
+# Visualizing the data with a bar plot
+library(ggplot2)
+
+ggplot(ntu_data, aes(x = Turbidity_Binned, 
+                     fill = Treatment)) +
+  geom_bar(position = "dodge", 
+           color = "black", 
+           size = 0.5) +
+  labs(title = "Turbidity Distribution by Treatment",
+       x = "Turbidity (NTU Binned)",
+       y = "Frequency") +
+    scale_fill_manual(values = c("Treatment A" = "lightblue", "Treatment B" = "darksalmon")) 
+
+
+```
+
+----------------------------------------------------------------------------------------------
+
+3.  A dozen graduate students tried to determine if there was a relationship between their undergraduate GPA and their scores on the Graduate Records Examination. Look at these data and determine the extent to which they are related. Explain.
+
+```{r, message=FALSE, warning=FALSE}
+
+# Step 1: Read the CSV data
+data <- read.csv("grad_school.csv")
+
+# Step 2: Scatter plot
+plot(data$GPA, data$GRE, 
+     main = "Scatter plot of GPA vs. GRE", 
+     xlab = "Undergraduate GPA", 
+     ylab = "GRE Score", 
+     pch = 19, col = "blue")
+
+# Step 3: Correlation
+correlation <- cor(data$GPA, data$GRE)
+print(paste("Correlation coefficient: ", correlation))
+
+# Step 4: Linear regression
+model <- lm(GRE ~ GPA, data = data)
+summary(model)
+
+```
+
+----------------------------------------------------------------------------------------------
+
+4.  You are looking at fruit yield on dogwood. You designed an experiment with four different treatments and measured the total yield in germinated seeds. Are there differences in yield? Explain.
+
+```{r, message=FALSE, warning=FALSE}
+
+# Load the data
+data <- read.csv("DogwoodSeeds.csv")
+
+# Run the ANOVA
+anova_result <- aov(Seeds ~ Treatment, data = data)
+
+# Summary of the ANOVA
+summary(anova_result)
+
+# Perform Tukey's HSD post-hoc test
+tukey_result <- TukeyHSD(anova_result)
+
+# Display the results of Tukey's test
+print(tukey_result)
+
+# Visualize the boxplot with ggplot2
+library(ggplot2)
+
+ggplot(data, aes(x = Treatment, y = Seeds, fill = Treatment)) +
+  geom_boxplot() +
+  labs(title = "Boxplot of Seed Yields by Treatment", 
+       x = "Treatment", 
+       y = "Seed Yield (Seeds)") +
+   scale_fill_brewer(palette = "Set3") +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+```

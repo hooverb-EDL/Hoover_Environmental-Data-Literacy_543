@@ -6,51 +6,35 @@ editor: visual
 
 ## MISC.
 
--   Talk to Ed about possible Winter Intercession paid position at Rice
-
-    -   Invasive Species Removal
-
-    -   Other Cool Things
-
 ## Wilderness First Responder
 
--   Brush up on Primary and Secondary Assessments
-
--   Brush up on care for splints, and mus culoskeletal injury
+-   Exams
 
 ## Forest Ecology
-
--   Review notes, tests and labs
 
 -   Final Project -\> Review
 
 ## Applied Restoration Ecology
 
--   Final Project Review
-
--   Read Texts
-
--   View Announcements
-
 -   Final Project -\> Review
+
+-   Invasive Species
+
+-   Long-leaf
+
+-   Individual (PPP)
 
 ## Environmental Data Literacy
 
 -   Final Project -\> Review
 
--   Group Project
-
--   Ggplot -\> Get Ahead
+-   Non-Parametric Counting Statistics
 
 ## FWS Internship / ORC Manager
 
 -   Update Training doc and review materials - fresh eyes
 
     -   <https://docs.google.com/document/d/1E0YxLLwBZPYpQ2V6MTcX3zb0qP_jQda3PAtKWr3ggmI/edit?usp=sharing>
-
--   Chili Cook off
-
--   Meet with October manager
 
 ### Deliverable(s)
 
