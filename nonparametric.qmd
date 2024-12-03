@@ -22,8 +22,6 @@ At the end of this topic, you should be able to:
 -   Communicate the results of non-parametric analyses. 
 
 
-## Questions
-
 For each of the following questions, please provide your analysis and an interpretation (e.g., written as you would in a scientific publication). If it helps to describe your result, add tables or figures to help make your case. For every case, explain why you chose the particular analysis you did and demonstrate the reasons from the data.
 
 ### Question 1.  
@@ -178,7 +176,7 @@ vis3 <- ggplot(data, aes(x = Treatment,
   geom_boxplot() +
   labs(title = "Boxplot of Seed Yields by Treatment", 
        x = "Treatment", 
-       y = "Seed Yield (Seeds)") +
+       y = "Seed Yield") +
    scale_fill_brewer(palette = "Set3") +
   theme_minimal() +
   theme(legend.position = "none")
