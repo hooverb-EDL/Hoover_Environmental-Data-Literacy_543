@@ -83,12 +83,6 @@ library(dplyr)
 # Load the data from CSV
 ntu_data <- read.csv("ntu_data.csv")
 
-# View the first few rows of the dataset
-head(ntu_data)
-
-# Check the structure of the data
-str(ntu_data)
-
 # Create a new factor variable for turbidity bins
 ntu_data$Turbidity_Binned <- cut(ntu_data$NTU,
                                   breaks = c(0, 15, 22, 30, Inf),
@@ -97,9 +91,6 @@ ntu_data$Turbidity_Binned <- cut(ntu_data$NTU,
 
 # Create a contingency table
 contingency_table <- table(ntu_data$Treatment, ntu_data$Turbidity_Binned)
-
-# View the contingency table
-print(contingency_table)
 
 # Perform the Chi-Square test
 chi_square_result <- chisq.test(contingency_table)
@@ -110,15 +101,16 @@ chi_square_result
 # Visualizing the data with a bar plot
 library(ggplot2)
 
-ggplot(ntu_data, aes(x = Turbidity_Binned, 
-                     fill = Treatment)) +
-  geom_bar(position = "dodge", 
+vis1 <- ggplot(ntu_data, aes(x = Treatment, 
+                     fill = Turbidity_Binned)) +
+  geom_bar(position = "stack", 
            color = "black", 
            size = 0.5) +
   labs(title = "Turbidity Distribution by Treatment",
-       x = "Turbidity (NTU Binned)",
-       y = "Frequency") +
-    scale_fill_manual(values = c("Treatment A" = "lightblue", "Treatment B" = "darksalmon")) 
+       x = "Treatment",
+       y = "Frequency",
+       fill = "NTU Binned")+
+  scale_fill_brewer(palette = "Set3")
 
 
 ```
@@ -131,21 +123,24 @@ A dozen graduate students tried to determine if there was a relationship between
 
 ```{r, message=FALSE, warning=FALSE}
 
-# Step 1: Read the CSV data
+# Read the CSV data
 data <- read.csv("grad_school.csv")
 
-# Step 2: Scatter plot
-plot(data$GPA, data$GRE, 
-     main = "Scatter plot of GPA vs. GRE", 
-     xlab = "Undergraduate GPA", 
-     ylab = "GRE Score", 
-     pch = 19, col = "blue")
+# Scatter plot
+vis2 <- ggplot(data, aes(x = GPA, y = GRE)) +
+  geom_point(shape = 19) +
+  labs(
+    title = "Scatter plot of GPA vs. GRE",
+    x = "Undergraduate GPA",
+    y = "GRE Score"
+  )+
+  theme_minimal()
 
-# Step 3: Correlation
+# Correlation
 correlation <- cor(data$GPA, data$GRE)
 print(paste("Correlation coefficient: ", correlation))
 
-# Step 4: Linear regression
+# Linear regression
 model <- lm(GRE ~ GPA, data = data)
 summary(model)
 
@@ -177,7 +172,9 @@ print(tukey_result)
 # Visualize the boxplot with ggplot2
 library(ggplot2)
 
-ggplot(data, aes(x = Treatment, y = Seeds, fill = Treatment)) +
+vis3 <- ggplot(data, aes(x = Treatment, 
+                         y = Seeds, 
+                         fill = Treatment)) +
   geom_boxplot() +
   labs(title = "Boxplot of Seed Yields by Treatment", 
        x = "Treatment", 
@@ -186,4 +183,16 @@ ggplot(data, aes(x = Treatment, y = Seeds, fill = Treatment)) +
   theme_minimal() +
   theme(legend.position = "none")
 
+```
+
+
+# Appendix A : Tables and Figures
+
+```{r, message=FALSE, warning=FALSE}
+library(gridExtra)
+
+grid.arrange(vis1,
+             vis2,
+             vis3,
+             ncol = 2)
 ```
