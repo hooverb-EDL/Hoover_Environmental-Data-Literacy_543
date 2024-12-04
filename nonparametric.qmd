@@ -2,7 +2,7 @@
 title: "Non Parametric and Counting Statistics"
 author: "Rebecca Hoover"
 title-block-banner: true
-date: "10/15/2024"
+date: "12/03/2024"
 abstract: "Counting and non-parametric statistics play a crucial role when dealing with categorical data for both predictors and response variables, or when the assumptions required for parametric methods (such as normality, homoscedasticity, etc.) are not met. These methods offer alternative approaches to analyzing data that may not conform to the assumptions of traditional parametric techniques like correlation, regression, or ANOVA, providing robust tools for data analysis in non-ideal situations."
 smooth-scroll: true
 format: html
