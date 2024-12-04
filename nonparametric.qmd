@@ -3,7 +3,7 @@ title: "Non Parametric and Counting Statistics"
 author: "Rebecca Hoover"
 title-block-banner: true
 date: "10/15/2024"
-abstract: "Counting and Non-Parametric Statistics are essential when you either have categorical data for both predictors and response variables OR your data that you wanted to use a parametric approach (correlation, regression, ANOVA) is not well-behaved and will continue to conform to the assumptions of those models (e.g., normality, homoscedasticity, etc.)."
+abstract: "Counting and non-parametric statistics play a crucial role when dealing with categorical data for both predictors and response variables, or when the assumptions required for parametric methods (such as normality, homoscedasticity, etc.) are not met. These methods offer alternative approaches to analyzing data that may not conform to the assumptions of traditional parametric techniques like correlation, regression, or ANOVA, providing robust tools for data analysis in non-ideal situations."
 smooth-scroll: true
 format: html
 editor: visual
@@ -23,6 +23,8 @@ At the end of this topic, you should be able to:
 
 
 For each of the following questions, please provide your analysis and an interpretation (e.g., written as you would in a scientific publication). If it helps to describe your result, add tables or figures to help make your case. For every case, explain why you chose the particular analysis you did and demonstrate the reasons from the data.
+
+***All Figures are located in Appendix at the Bottom of this HTML***
 
 ### Question 1.  
 
@@ -67,6 +69,7 @@ if (p_value < 0.05) {
 ```
 
 **This statement verifies that the alteration in the medication resulted in a statistically significant effect on the observed outcomes. The analysis indicated a p-value that is lower than  0.05, suggesting that the likelihood of the observed results occurring by chance is extremely low. This strong statistical evidence supports the conclusion that the change in medication had a meaningful impact on the study's findings.**
+
 
 ----------------------------------------------------------------------------------------------
 
@@ -113,6 +116,10 @@ vis1 <- ggplot(ntu_data, aes(x = Treatment,
 
 ```
 
+**In this study, turbidity levels were categorized into four distinct bins: 0-15 NTU, 16-22 NTU, 23-30 NTU, and 31+ NTU. A contingency table was constructed to assess how frequently each treatment resulted in turbidity within these categories. To evaluate the potential differences in turbidity effects between the treatments, a chi-square test was conducted.**
+**The results of the analysis yielded a p-value of 0.0006, which is significantly lower than the 0.05 threshold. This finding suggests a statistically significant difference in the turbidity outcomes associated with the two treatments.**
+**Further examination reveals that Treatment B is associated with a higher frequency of turbidity across the various bins, indicating that it contributes more significantly to increased turbidity levels. In contrast, Treatment A appears to correlate with lower turbidity frequencies, resulting in less pronounced separations within the established categories. These outcomes underscore the distinct impacts of each treatment on turbidity levels, with Treatment B leading to a more considerable increase in turbidity compared to Treatment A.**
+
 ----------------------------------------------------------------------------------------------
 
 ### Question 3.  
@@ -134,15 +141,15 @@ vis2 <- ggplot(data, aes(x = GPA, y = GRE)) +
   )+
   theme_minimal()
 
-# Correlation
-correlation <- cor(data$GPA, data$GRE)
-print(paste("Correlation coefficient: ", correlation))
+# Spearman Correlation
+spearman_corr <- cor.test(data$GPA, data$GRE, method = "spearman")
 
-# Linear regression
-model <- lm(GRE ~ GPA, data = data)
-summary(model)
+print(spearman_corr)
+
 
 ```
+
+**In this study, a Spearman correlation test was conducted to explore the relationship between Grade Point Average (GPA) and Graduate Record Examination (GRE) scores, chosen for its suitability in analyzing monotonic relationships without assuming linearity. The results yielded a Spearman correlation coefficient of 0.585 and a p-value of 0.046, indicating a moderate positive correlation that approaches statistical significance. These findings suggest that students with higher GPAs tend to achieve better GRE scores, reflecting a positive association between undergraduate academic performance and GRE performance. However, the correlation is not perfect, as illustrated by the scatterplot, which shows a slight positive linear trend accompanied by some variability in data points. This variability indicates that other factors may also influence GRE scores among students with comparable GPAs, emphasizing the complexity of academic assessment and the need for further research to understand these underlying dynamics.**
 
 ----------------------------------------------------------------------------------------------
 
@@ -153,24 +160,16 @@ You are looking at fruit yield on dogwood. You designed an experiment with four 
 ```{r, message=FALSE, warning=FALSE}
 
 # Load the data
-data <- read.csv("DogwoodSeeds.csv")
+data_dog <- read.csv("DogwoodSeeds.csv")
 
-# Run the ANOVA
-anova_result <- aov(Seeds ~ Treatment, data = data)
-
-# Summary of the ANOVA
-summary(anova_result)
-
-# Perform Tukey's HSD post-hoc test
-tukey_result <- TukeyHSD(anova_result)
-
-# Display the results of Tukey's test
-print(tukey_result)
+# Kruskal-Wallis Test
+kruskal_test <- kruskal.test(Seeds ~ Treatment, data = data_dog)
+print(kruskal_test)
 
 # Visualize the boxplot with ggplot2
 library(ggplot2)
 
-vis3 <- ggplot(data, aes(x = Treatment, 
+vis3 <- ggplot(data_dog, aes(x = Treatment, 
                          y = Seeds, 
                          fill = Treatment)) +
   geom_boxplot() +
@@ -183,6 +182,9 @@ vis3 <- ggplot(data, aes(x = Treatment,
 
 ```
 
+**In this study, the Kruskal-Wallis test was employed to compare seed yield across four different treatments, as preliminary analysis indicated that the data may not be normally distributed, a conclusion supported by the box and whisker plot illustrating the non-comparability of the treatments. The results yielded a p-value of 0.00001, which is less than the 0.05 threshold, indicating a statistically significant difference in seed yield among the treatments. This significant finding, coupled with the observed high variation in the boxplot, suggests that the treatments have a meaningful impact on seed yield, warranting further investigation into their specific effects.**
+
+-----------------------------------------------------------------------------
 
 # Appendix A : Tables and Figures
 

@@ -106,7 +106,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <div>
     <div class="abstract">
       <div class="block-title">Abstract</div>
-      Counting and Non-Parametric Statistics are essential when you either have categorical data for both predictors and response variables OR your data that you wanted to use a parametric approach (correlation, regression, ANOVA) is not well-behaved and will continue to conform to the assumptions of those models (e.g., normality, homoscedasticity, etc.).
+      Counting and non-parametric statistics play a crucial role when dealing with categorical data for both predictors and response variables, or when the assumptions required for parametric methods (such as normality, homoscedasticity, etc.) are not met. These methods offer alternative approaches to analyzing data that may not conform to the assumptions of traditional parametric techniques like correlation, regression, or ANOVA, providing robust tools for data analysis in non-ideal situations.
     </div>
   </div>
   
@@ -127,6 +127,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p>Communicate the results of non-parametric analyses.</p></li>
 </ul>
 <p>For each of the following questions, please provide your analysis and an interpretation (e.g., written as you would in a scientific publication). If it helps to describe your result, add tables or figures to help make your case. For every case, explain why you chose the particular analysis you did and demonstrate the reasons from the data.</p>
+<p><strong><em>All Figures are located in Appendix at the Bottom of this HTML</em></strong></p>
 <section id="question-1." class="level3">
 <h3 class="anchored" data-anchor-id="question-1.">Question 1.</h3>
 <p>The FDA has suggested a change in a medication that has been shown to have detrimental side effects in half of the patients. A clinical trial was conducted with nineteen patients; only three reported side effects. Did the change make a significant difference?</p>
@@ -216,6 +217,7 @@ X-squared = 17.286, df = 3, p-value = 0.0006172</code></pre>
 <span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>       <span class="at">fill =</span> <span class="st">"NTU Binned"</span>)<span class="sc">+</span></span>
 <span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"Set3"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<p><strong>In this study, turbidity levels were categorized into four distinct bins: 0-15 NTU, 16-22 NTU, 23-30 NTU, and 31+ NTU. A contingency table was constructed to assess how frequently each treatment resulted in turbidity within these categories. To evaluate the potential differences in turbidity effects between the treatments, a chi-square test was conducted.</strong> <strong>The results of the analysis yielded a p-value of 0.0006, which is significantly lower than the 0.05 threshold. This finding suggests a statistically significant difference in the turbidity outcomes associated with the two treatments.</strong> <strong>Further examination reveals that Treatment B is associated with a higher frequency of turbidity across the various bins, indicating that it contributes more significantly to increased turbidity levels. In contrast, Treatment A appears to correlate with lower turbidity frequencies, resulting in less pronounced separations within the established categories. These outcomes underscore the distinct impacts of each treatment on turbidity levels, with Treatment B leading to a more considerable increase in turbidity compared to Treatment A.</strong></p>
 <hr>
 </section>
 <section id="question-3." class="level3">
@@ -235,102 +237,69 @@ X-squared = 17.286, df = 3, p-value = 0.0006172</code></pre>
 <span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  )<span class="sc">+</span></span>
 <span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
 <span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Correlation</span></span>
-<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>correlation <span class="ot">&lt;-</span> <span class="fu">cor</span>(data<span class="sc">$</span>GPA, data<span class="sc">$</span>GRE)</span>
-<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"Correlation coefficient: "</span>, correlation))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] "Correlation coefficient:  0.66606327132587"</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Linear regression</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">lm</span>(GRE <span class="sc">~</span> GPA, <span class="at">data =</span> data)</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Spearman Correlation</span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>spearman_corr <span class="ot">&lt;-</span> <span class="fu">cor.test</span>(data<span class="sc">$</span>GPA, data<span class="sc">$</span>GRE, <span class="at">method =</span> <span class="st">"spearman"</span>)</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(spearman_corr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
-Call:
-lm(formula = GRE ~ GPA, data = data)
+    Spearman's rank correlation rho
 
-Residuals:
-    Min      1Q  Median      3Q     Max 
--57.842 -24.848  -9.777  28.297  82.827 
-
-Coefficients:
-            Estimate Std. Error t value Pr(&gt;|t|)  
-(Intercept)   111.25     165.16   0.674    0.516  
-GPA           128.98      45.68   2.824    0.018 *
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-Residual standard error: 42.65 on 10 degrees of freedom
-Multiple R-squared:  0.4436,    Adjusted R-squared:  0.388 
-F-statistic: 7.974 on 1 and 10 DF,  p-value: 0.01804</code></pre>
+data:  data$GPA and data$GRE
+S = 118.83, p-value = 0.04593
+alternative hypothesis: true rho is not equal to 0
+sample estimates:
+      rho 
+0.5845215 </code></pre>
 </div>
 </div>
+<p><strong>In this study, a Spearman correlation test was conducted to explore the relationship between Grade Point Average (GPA) and Graduate Record Examination (GRE) scores, chosen for its suitability in analyzing monotonic relationships without assuming linearity. The results yielded a Spearman correlation coefficient of 0.585 and a p-value of 0.046, indicating a moderate positive correlation that approaches statistical significance. These findings suggest that students with higher GPAs tend to achieve better GRE scores, reflecting a positive association between undergraduate academic performance and GRE performance. However, the correlation is not perfect, as illustrated by the scatterplot, which shows a slight positive linear trend accompanied by some variability in data points. This variability indicates that other factors may also influence GRE scores among students with comparable GPAs, emphasizing the complexity of academic assessment and the need for further research to understand these underlying dynamics.</strong></p>
 <hr>
 </section>
 <section id="question-4." class="level3">
 <h3 class="anchored" data-anchor-id="question-4.">Question 4.</h3>
 <p>You are looking at fruit yield on dogwood. You designed an experiment with four different treatments and measured the total yield in germinated seeds. Are there differences in yield? Explain.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the data</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"DogwoodSeeds.csv"</span>)</span>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the data</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>data_dog <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"DogwoodSeeds.csv"</span>)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Kruskal-Wallis Test</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>kruskal_test <span class="ot">&lt;-</span> <span class="fu">kruskal.test</span>(Seeds <span class="sc">~</span> Treatment, <span class="at">data =</span> data_dog)</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(kruskal_test)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Kruskal-Wallis rank sum test
+
+data:  Seeds by Treatment
+Kruskal-Wallis chi-squared = 25.629, df = 3, p-value = 1.141e-05</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualize the boxplot with ggplot2</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Run the ANOVA</span></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>anova_result <span class="ot">&lt;-</span> <span class="fu">aov</span>(Seeds <span class="sc">~</span> Treatment, <span class="at">data =</span> data)</span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Summary of the ANOVA</span></span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(anova_result)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>            Df Sum Sq Mean Sq F value   Pr(&gt;F)    
-Treatment    3 1028.6   342.9   30.71 2.81e-09 ***
-Residuals   30  334.9    11.2                     
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>vis3 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(data_dog, <span class="fu">aes</span>(<span class="at">x =</span> Treatment, </span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>                         <span class="at">y =</span> Seeds, </span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>                         <span class="at">fill =</span> Treatment)) <span class="sc">+</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Boxplot of Seed Yields by Treatment"</span>, </span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Treatment"</span>, </span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Seed Yield"</span>) <span class="sc">+</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>   <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"Set3"</span>) <span class="sc">+</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Perform Tukey's HSD post-hoc test</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>tukey_result <span class="ot">&lt;-</span> <span class="fu">TukeyHSD</span>(anova_result)</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the results of Tukey's test</span></span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(tukey_result)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>  Tukey multiple comparisons of means
-    95% family-wise confidence level
-
-Fit: aov(formula = Seeds ~ Treatment, data = data)
-
-$Treatment
-          diff        lwr          upr     p adj
-B-A  -4.155556  -8.329973   0.01886205 0.0513847
-C-A   5.158730   0.580158   9.73730232 0.0225256
-D-A -10.680556 -15.095229  -6.26588236 0.0000016
-C-B   9.314286   4.836990  13.79158152 0.0000209
-D-B  -6.525000 -10.834547  -2.21545315 0.0014990
-D-C -15.839286 -20.541387 -11.13718461 0.0000000</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualize the boxplot with ggplot2</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>vis3 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">x =</span> Treatment, </span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>                         <span class="at">y =</span> Seeds, </span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>                         <span class="at">fill =</span> Treatment)) <span class="sc">+</span></span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Boxplot of Seed Yields by Treatment"</span>, </span>
-<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Treatment"</span>, </span>
-<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Seed Yield"</span>) <span class="sc">+</span></span>
-<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>   <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"Set3"</span>) <span class="sc">+</span></span>
-<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
+<p><strong>In this study, the Kruskal-Wallis test was employed to compare seed yield across four different treatments, as preliminary analysis indicated that the data may not be normally distributed, a conclusion supported by the box and whisker plot illustrating the non-comparability of the treatments. The results yielded a p-value of 0.00001, which is less than the 0.05 threshold, indicating a statistically significant difference in seed yield among the treatments. This significant finding, coupled with the observed high variation in the boxplot, suggests that the treatments have a meaningful impact on seed yield, warranting further investigation into their specific effects.</strong></p>
+<hr>
 </section>
 </section>
 <section id="appendix-a-tables-and-figures" class="level1">
 <h1>Appendix A : Tables and Figures</h1>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gridExtra)</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(vis1,</span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>             vis2,</span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>             vis3,</span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>             <span class="at">ncol =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gridExtra)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(vis1,</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>             vis2,</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>             vis3,</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>             <span class="at">ncol =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
