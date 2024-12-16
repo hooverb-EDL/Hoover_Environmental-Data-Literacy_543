@@ -45,7 +45,9 @@ Finally, we applied the model incorporating current habitat suitability and phen
 
 Model diagnostics are crucial for validating our findings. Although we focused on model comparisons, examining residuals using plot(model_3) helps check assumptions like linearity, homoscedasticity (constant variance), and normality. This assessment ensures reliable conclusions about the relationships between sex ratios, habitat suitability, and phenotypic traits.
 
-```{r, message=FALSE, warning=FALSE, echo=FALSE}
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(message = FALSE, warning = FALSE, echo = FALSE)
+
 #Data Wrangling 
 
 ## Packages
