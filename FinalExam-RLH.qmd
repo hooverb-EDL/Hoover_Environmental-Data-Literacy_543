@@ -13,11 +13,10 @@ editor: visual
 editor_options: 
   chunk_output_type: console
 footertext: "**Packages are loaded in asuming you have the files in the correct folder**"
-
 ---
 
-
 <center>
+
 ![*Araptus attenuatus* Sonoran Desert Bark Beetle.](https://live.staticflickr.com/65535/50441339417_74e04216fa_w_d.jpg)
 
 </center>
@@ -26,12 +25,11 @@ footertext: "**Packages are loaded in asuming you have the files in the correct 
 
 The Sonoran bark beetle (*Araptus attenuatus*) is a significant pest in North American pine forests, playing a key role in forest dynamics by infesting and killing trees. Males seek out newly senescing stems of Pinus species, such as Pinus lomellii, to hollow out chambers for habitation. They produce a pheromone to attract females for reproduction, but remain stationary once settled. In contrast, females are more mobile and tend to travel farther, suggesting that female preference and mobility are crucial in shaping sex ratios within populations.
 
-  Habitat suitability is an important factor influencing these sex ratios, with the "better neighborhood hypothesis" suggesting that females prefer habitats conducive to reproduction. Thus, sites with higher suitability may display lower sex ratios, indicating more females per male.
+Habitat suitability is an important factor influencing these sex ratios, with the "better neighborhood hypothesis" suggesting that females prefer habitats conducive to reproduction. Thus, sites with higher suitability may display lower sex ratios, indicating more females per male.
 
-  This study also explores how historical climate change, particularly during the Last Glacial Maximum (LGM) about 20,000 years ago, may have affected species distributions and sex ratios. By comparing current habitat suitability with reconstructions from the LGM, we can better understand how past climate shifts influenced population structures.
+This study also explores how historical climate change, particularly during the Last Glacial Maximum (LGM) about 20,000 years ago, may have affected species distributions and sex ratios. By comparing current habitat suitability with reconstructions from the LGM, we can better understand how past climate shifts influenced population structures.
 
-  We aim to determine whether sex ratios vary across sites, how habitat suitability is related to these ratios, and the potential influence of phenotypic traits. Additionally, we will consider how historical changes in habitat suitability impacted *A. attenuatus* sex ratios during the LGM.
-
+We aim to determine whether sex ratios vary across sites, how habitat suitability is related to these ratios, and the potential influence of phenotypic traits. Additionally, we will consider how historical changes in habitat suitability impacted *A. attenuatus* sex ratios during the LGM.
 
 ## 2. Methods
 
@@ -52,20 +50,19 @@ Model diagnostics are crucial for validating our findings. Although we focused o
 
 ## Packages
 needed_libraries <- c("sf",
-                      "maps",
                       "units",
-                      "rgdal", #not available in the version of R
-                      "rgeos", #not available in the version of R
                       "GGally",
                       "raster",
-                      "mapproj",
                       "leaflet",
                       "rnaturalearth",
                       "rnaturalearthdata",
                       "kableExtra",
                       "raster",
                       "dplyr",
-                      "spdep"
+                      "spdep",
+                      "broom",
+                      "readr"
+                      
 )
 
 # Determines which libraries you do not have already installed.
@@ -77,7 +74,6 @@ if (length(need_inst)) {
   
   # Load libraries after installation
   library(dplyr)
-  library(geosphere)
   library(ggplot2)
   library(leaflet)
   library(sf)
@@ -87,17 +83,25 @@ if (length(need_inst)) {
   library(kableExtra)
   library(raster)
   library(spdep)
+  library(broom)
+  library(kableExtra)
+  library(readr)
+
+
 }
 
+# Load all libraries
+lapply(needed_libraries, library, character.only = TRUE)
 ## Datasets
+
 locations <- read_csv("Arapat_Locations.csv")
+
 samples <- read_csv("Arapat_Samples.csv")
 
 # Join CSVs
 data_joined <- full_join(locations, samples, by = "Site")
 
 ```
-
 
 ```{r, message=FALSE, warning=FALSE, echo=FALSE}
 
@@ -124,6 +128,12 @@ site_sex_ratio <- sex_counts_wide %>%
 # Perform an ANOVA to test if sex ratio differs significantly across sites
 anova_result <- aov(sex_ratio ~ Site, data = sex_counts_wide)
 
+# Use broom to tidy the results
+#anova_table <- tidy(anova_result)
+
+# Create a table using kable
+#kable(anova_table, caption = "ANOVA Results for Sex Ratio by Site")
+
 # Summarize the ANOVA results
 #summary(anova_result)
 #Pvalue = 0.00307
@@ -134,7 +144,6 @@ sex_counts_stacked <- data_joined %>%
   summarise(count = n(), .groups = 'drop')
 
 ```
-
 
 ```{r, message=FALSE, warning=FALSE, echo=FALSE}
 
@@ -158,7 +167,6 @@ deviation_sites <- sex_counts_stacked %>%
 
 #No Significant Deviations
 ```
-
 
 ```{r, message=FALSE, warning=FALSE, echo=FALSE}
 
@@ -192,7 +200,6 @@ cor_test <- cor.test(site_data$suitability, site_data$mean_sex_ratio)
 
 ###Significant negative regression
 ```
-
 
 ```{r, message=FALSE, warning=FALSE, echo=FALSE}
 
@@ -245,7 +252,6 @@ model_2 <- lm(mean_sex_ratio ~ suitability + PhenotypeA + PhenotypeB, data = dat
 
 ```
 
-
 ```{r, message=FALSE, warning=FALSE, echo=FALSE}
 
 #Using the data from the last glacial maximum and the sampling locations, has the suitability changed at each location (e.g., was it as suitable 20,000 years ago as today)?
@@ -273,7 +279,6 @@ locations <- locations %>%
 locations_clean <- locations %>%
   filter(!is.na(Change_in_Suitability))
 ```
-
 
 ```{r, message=FALSE, warning=FALSE, echo=FALSE}
 #Predict the distribution of the historical sex ratio by applying the model you developed for current conditions to the suitability estimated from the last glacial maximum.  Across the landscape, do you detect any trends that may be due to the differences in climate, as measured by our estimates of habitat suitability?
@@ -338,11 +343,12 @@ morans_test <- moran.test(locations_joined_clean$predicted_sex_ratio_lgm, listw)
 #     9.879839e-01     -3.334445e-04      8.467544e-05 
 ```
 
-
 ## 3. Results
+
 The results of this study are organized into key sections addressing sex ratios of Sonoran bark beetle populations, habitat suitability, phenotypic traits, and changes over time.
 
 ### 3.1. Sex Ratios Across Sites
+
 We examined sex ratios at each sampling site through aggregated beetle data. ANOVA results showed significant variation in sex ratios across sites (p = 0.00307), indicating notable differences by location. A stacked bar plot (Figure 1) illustrates this variation in sex distribution.
 
 ```{r, warning=FALSE, message=FALSE, echo=FALSE}
@@ -356,12 +362,30 @@ ggplot(sex_counts_stacked, aes(x = factor(Site), y = count, fill = Sex)) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
+
 <center>
+
 Figure 1. Stacked bar plot displaying the male-to-female beetle ratio at each site.
+
+<center>
+
+```{r, warning=FALSE, message=FALSE, echo=FALSE}
+# Use broom to tidy the results
+anova_table <- tidy(anova_result)
+
+# Create a table using kable
+kable(anova_table, caption = "ANOVA Results for Sex Ratio by Site")
+```
+<center>
+
+Table 1. Table presenting the results of the ANOVA analysis.
+
 <center>
 
 ### 3.2. Deviations from an Equal Male-to-Female Ratio
+
 Binomial tests revealed no significant deviations from a 1:1 male-to-female ratio at any site, with all p-values exceeding 0.05. This indicates that overall, sex ratios were approximately equal across sites.
+
 ```{r, warning=FALSE, message=FALSE, echo=FALSE}
 #Question 2
 
@@ -392,11 +416,15 @@ deviation_sites %>%
 
 
 ```
+
 <center>
-Table 1. Table indicating no significant deviations from the binomial tests.
+
+Table 2. Table indicating no significant deviations from the binomial tests.
+
 <center>
 
 ### 3.3. Habitat Suitability and Sex Ratio
+
 We analyzed the relationship between habitat suitability and sex ratios by merging data from a 1.0 km² raster. A Pearson's correlation showed a significant negative relationship (r = -0.37, p = 0.04717), suggesting that higher habitat suitability corresponds to lower mean sex ratios, as confirmed by a scatter plot (Figure 2).
 
 ```{r, warning=FALSE, message=FALSE, echo=FALSE}
@@ -411,14 +439,19 @@ ggplot(site_data, aes(x = suitability, y = mean_sex_ratio)) +
   theme_minimal()
 
 ```
+
 <center>
+
 Figure 2. Linear regression model showing a significant negative relationship between sex ratio and habitat suitability.
+
 <center>
 
 ### 3.4. Impact of Phenotypic Traits
+
 We compared two linear regression models: one with only habitat suitability and another that included phenotypic traits (Phenotype A and B). Including the traits improved the model fit (Model 2: AIC = -7678.54 vs. Model 1: AIC = -7630.36), and ANOVA results were highly significant (p = 4.848e-12), indicating a notable contribution of phenotypic traits to the variation in sex ratios.
 
 ### 3.5. Changes in Habitat Suitability Since the Last Glacial Maximum (LGM)
+
 We analyzed changes in habitat suitability from the LGM to the present by comparing LGM suitability data with current values, visualized on an interactive leaflet map (Figure 3). Variations showed both increases and decreases in suitability, providing insights into the impact of climate change on habitat for Sonoran bark beetles.
 
 ```{r, warning=FALSE, message=FALSE, echo=FALSE}
@@ -445,11 +478,15 @@ leaflet(locations_clean) %>%
   setView(lng = -110.5, lat = 27, zoom = 6)
 
 ```
+
 <center>
+
 Figure 6. The figure illustrates the change in suitability across the landscape.
+
 <center>
 
 ### 3.6. Predicted Historical Sex Ratios
+
 Using our model, we predicted historical sex ratios based on LGM suitability estimates, displayed in an interactive map (Figure 4). A correlation test indicated a significant relationship (r = 0.48, p = 0.003), suggesting that higher LGM suitability regions had higher predicted sex ratios.
 
 ```{r, warning=FALSE, message=FALSE, echo=FALSE}
@@ -462,12 +499,17 @@ ggplot(locations_joined, aes(x = Suitability_LGM, y = predicted_sex_ratio_lgm)) 
        x = "LGM Suitability", y = "Predicted Historical Sex Ratio") +
   theme_minimal()
 ```
+
 <center>
+
 Figure 7. The figure displays the predicted historical sex ratio versus LGM suitability, demonstrating a significant negative correlation.
+
 <center>
 
 ### 3.7. Spatial Autocorrelation in Historical Sex Ratios
-Finally, a Moran’s I test showed significant spatial autocorrelation in predicted historical sex ratios (Moran's I = 0.9879, p < 0.001), indicating that neighboring sites had similar ratios due to shared environmental and climatic influences.
+
+Finally, a Moran’s I test showed significant spatial autocorrelation in predicted historical sex ratios (Moran's I = 0.9879, p \< 0.001), indicating that neighboring sites had similar ratios due to shared environmental and climatic influences.
+
 ```{r, warning=FALSE, message=FALSE, echo=FALSE}
 locations_joined_clean <- locations_joined %>%
   filter(!is.na(predicted_sex_ratio_lgm))
@@ -492,9 +534,13 @@ leaflet(locations_joined_clean) %>%
 
 
 ```
+
 <center>
+
 Figure 9. The figure shows the predicted historical sex ratio across the landscape.
+
 <center>
+
 ## 4. Discussion
 
 This study examines the relationship between habitat suitability, sex ratio, and phenotypic traits in populations of *A. attenuatus*. We observed variations in sex ratios across different sites, finding a significant correlation between habitat quality and the average sex ratio. This supports the idea that better-quality habitats tend to attract more females.
@@ -504,8 +550,6 @@ By incorporating phenotypic traits into our analysis, we enhanced our understand
 Additionally, our findings identified spatial autocorrelation in predicted sex ratios, suggesting that nearby sites often exhibit similar ratios due to shared environmental factors. These insights are important for forest management and pest control strategies, particularly regarding the effects of *A. attenuatus* on pine forests.
 
 In summary, this study underscores the complex interactions among habitat, sex ratios, and phenotypic traits in *A. attenuatus*, highlighting the need for further research to guide effective management in the face of climate change.
-
-
 
 ## 5. Appendix A. Citations and Research References
 
@@ -521,10 +565,12 @@ In summary, this study underscores the complex interactions among habitat, sex r
 
 (6) Suitability_now.tif Download Suitability_now.tif: A GeoTIFF of our estimated habitat suitability index. This index is depicted as a raster (epsg 4326).
 
-(7) Suitability_lgm.asc Download Suitability_lgm.asc: Another raster (though this one is in a *.asc format) that has the estimate of the habitat during the last glacial maximum (epsg 4326).
+(7) Suitability_lgm.asc Download Suitability_lgm.asc: Another raster (though this one is in a \*.asc format) that has the estimate of the habitat during the last glacial maximum (epsg 4326).
 
 ## 6. Appendix B. Additional Tables and Figures
+
 Question 4
+
 ```{r, warning=FALSE, message=FALSE, echo=FALSE}
 #Question 4
 # Figure 3
@@ -533,9 +579,13 @@ ggplot(site_data, aes(x = suitability, y = mean_sex_ratio)) +
   labs(title = "Sex Ratio vs Habitat Suitability", x = "Habitat Suitability", y = "Mean Sex Ratio") +
   theme_minimal()
 ```
+
 <center>
+
 Figure 3. Scatterplot showing Sex Ration vs Habitat Suitability.
+
 <center>
+
 ```{r, warning=FALSE, message=FALSE, echo=FALSE}
 # Figure 4
 ggplot(site_data, aes(x = PhenotypeA, y = mean_sex_ratio)) +
@@ -543,9 +593,13 @@ ggplot(site_data, aes(x = PhenotypeA, y = mean_sex_ratio)) +
   labs(title = "Sex Ratio vs Phenotype A", x = "Phenotype A", y = "Mean Sex Ratio") +
   theme_minimal()
 ```
+
 <center>
+
 Figure 4. Sex Ratio vs Phenotype A
+
 <center>
+
 ```{r, warning=FALSE, message=FALSE, echo=FALSE}
 #Figure 5
 ggplot(site_data, aes(x = PhenotypeB, y = mean_sex_ratio)) +
@@ -553,9 +607,13 @@ ggplot(site_data, aes(x = PhenotypeB, y = mean_sex_ratio)) +
   labs(title = "Sex Ratio vs Phenotype B", x = "Phenotype B", y = "Mean Sex Ratio") +
   theme_minimal()
 ```
+
 <center>
+
 Figure 5. Sex Ratio vs Phenotype B
+
 <center>
+
 ```{r, warning=FALSE, message=FALSE, echo=FALSE}
 #Question 6
 
@@ -566,7 +624,9 @@ plot(model_3)
 
 
 ```
-<center>
-Figure 8. Plotted figures comparing the residuals within the data.
+
 <center>
 
+Figure 8. Plotted figures comparing the residuals within the data.
+
+<center>
